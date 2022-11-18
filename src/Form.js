@@ -5,8 +5,10 @@ import Summary from "./Summary.js";
 
 const testVertices = [[2, 2, 0], [2, 3, 0], [2, 4, 0], [2, 2, 1], [2, 3, 1], [2, 4, 1]];
 const testExchanges = [0.5, 0.1]
+const testDistances = [3, 3]
 const testEdges = [[[0, 1], [1, 2], [3, 4], [4, 5]], [[0, 3], [1, 4], [2, 5]]];
 const testLattice =  [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+
 
 class Form extends Component {
 
@@ -18,6 +20,7 @@ class Form extends Component {
             vertices: testVertices,
             edges: testEdges,
             exchanges: testExchanges,
+            distances: testDistances,
             lattice: testLattice
         }
     };
@@ -43,10 +46,12 @@ class Form extends Component {
         })
         .then(response => response.json())
         .then(data => { this.setState({
-            exchanges: data.exchanges, 
+            lattice: data.lattice,
+            exchanges: data.exchanges,
+            distances: data.distances, 
             vertices: data.vertices,
             edges: data.edges, 
-            lattice: data.lattice });
+             });
             console.log("Submit is invoked");
             console.log(this.state);
         });
@@ -71,8 +76,16 @@ class Form extends Component {
                     <p style={{display: "inline-block"}}>{this.state.fileName}</p>
                     <Button disabled={this.state.file === null} variant="contained" size="small" onClick={this.handleFileSubmit}>Upload</Button>
                 </div>
-                <ThreeScene vertices={this.state.vertices} edges={this.state.edges} lattice={this.state.lattice}/>
-                <Summary exchanges={this.state.exchanges}/>
+                <ThreeScene
+                    lattice={this.state.lattice}
+                    exchanges={this.state.exchanges}
+                    distances={this.state.distances}
+                    vertices={this.state.vertices} 
+                    edges={this.state.edges} />
+                <Summary 
+                    exchanges={this.state.exchanges}
+                    distances={this.state.distances}
+                    />
             </div>
         )
     };

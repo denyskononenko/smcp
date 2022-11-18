@@ -22,12 +22,13 @@ class Summary extends Component {
         let rows = [];
 
         for (let i = 0; i < this.props.exchanges.length; i++){
-            rows.push(this.createData(i, ExchangeColors[i], this.props.exchanges[i], 3))
+            rows.push(this.createData(i, ExchangeColors[i], this.props.exchanges[i], this.props.distances[i]))
         }
         return rows;
     }
 
     render(){
+        console.log(this.props)
         return(
             <div className="summaryWrapper">
                 <p>Number of determined transfer integrals: {this.props.exchanges.length}</p>
@@ -37,7 +38,7 @@ class Summary extends Component {
                         <TableRow>
                             <TableCell>Index</TableCell>
                             <TableCell align="center">Color</TableCell>
-                            <TableCell align="right">Hoping, eV</TableCell>
+                            <TableCell align="right">Hoping, meV</TableCell>
                             <TableCell align="right">Distance, Ang</TableCell>
                         </TableRow>
                         </TableHead>

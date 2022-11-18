@@ -11,37 +11,29 @@ class ThreeScene extends Component {
         // scene
         this.scene = new THREE.Scene();
         // this.scene.background = new THREE.Color( backgroundColor );
-        // light 
+        // init light 
         this.light = new THREE.AmbientLight("#ffffff", 1);
-        this.pointLight = new THREE.PointLight("#ffffff", 1, 100);
-        this.pointLight.position.set(30, 30, 30);
+        this.pointLight = new THREE.PointLight("#ffffff", 1, 1000);
+        this.pointLight.position.set(20, 20, 20);
+        this.pointLight.castShadow = true;
         this.scene.add(this.light);
         this.scene.add(this.pointLight);
+
         // renderer
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(sizes.width, sizes.height);
         this.mount.appendChild(this.renderer.domElement);
         // camera
         this.camera = new THREE.PerspectiveCamera(90, sizes.width / sizes.height, 0.05, 100);
-        this.camera.position.set(11, 11, 11);
+        this.camera.position.set(15, 15, 15);
         //controls
         const controls = new OrbitControls(this.camera, this.renderer.domElement);
+
         // configure controls constrains for maximal zoom in/out in angstroms
-        controls.maxDistance = 16;
+        controls.maxDistance = 20;
         controls.minDistance = 6;
 
-        this.scene.add(this.makeAtom(new THREE.Vector3(0,0,0)))
         this.addLatticeVectors();
-        // the spin model creation
-        let vertices = [];
-        
-        // convert vertices from array [x,y,z] to THREE.Vector3
-        this.props.vertices.forEach((vertice) => {
-            vertices.push(new THREE.Vector3(...vertice));
-        });
-        
-        // spin model to the scene 
-        this.scene.add(...this.makeSpinModel(vertices, this.props.edges));
         
         // start rendering
         this.renderScene();
@@ -73,16 +65,13 @@ class ThreeScene extends Component {
         this.frameId = window.requestAnimationFrame(this.animate);
     };
 
-    makeAtom = (point, radius0=null, color=null) => {
+    makeAtom = (point, radius0, color) => {
         let materialConfig = {
-            color: color, 
-            metalness: 0.25, 
-            roughness: 0.4,
-            emissiveIntensity: 0
+            color: color
         }
         /* Create the atom as a sphere at the given point (x,y,z) */
-        let material = color == null ?  new THREE.MeshNormalMaterial() : new THREE.MeshPhysicalMaterial(materialConfig);
-        let radius = radius0 == null ? 0.2 : radius0;
+        let material = new THREE.MeshPhysicalMaterial(materialConfig);
+        let radius = radius0;
         let geometry = new THREE.SphereGeometry(radius, 32, 16, 0, Math.PI * 2, 0, Math.PI);
         let sphere = new THREE.Mesh(geometry, material);
         // init coordinates of the atoms
@@ -97,7 +86,11 @@ class ThreeScene extends Component {
         // cylinder geometry
         let geometry = new THREE.CylinderGeometry(radius, radius, direction.length(), 8, 4);
         // cylinder material 
-        let material = new THREE.MeshBasicMaterial({color: color});
+        let material = new THREE.MeshBasicMaterial({
+            color: color,
+            transparent: true, 
+            opacity: 0.9
+        });
         // make the bound mesh
         let position  = point2.clone().add(point1).divideScalar(2);
         let orientation = new THREE.Matrix4(); // new orientation matrix to offset pivot
@@ -168,7 +161,7 @@ class ThreeScene extends Component {
         let edges3DObj = [];
         // create 3D objects for vertices
         vertices.forEach((position) => {
-            vertices3DObj.push(this.makeAtom(position));
+            vertices3DObj.push(this.makeAtom(position, 0.25, "#ffffff"));
         });
         // create 3D objects for exchanges
         exchanges.forEach((edges, exchangeIndex) => {
@@ -197,6 +190,18 @@ class ThreeScene extends Component {
         this.scene.add(...this.makeLatticeVectors(...lattice));
     };
 
+    addSpinModel = () => {
+        /* Add the spin model to the scene */
+        let vertices = [];
+        // convert vertices from array [x,y,z] to THREE.Vector3
+        this.props.vertices.forEach((vertice) => {
+            vertices.push(new THREE.Vector3(...vertice));
+        });
+        // spin model to the scene 
+        this.scene.add(...this.makeSpinModel(vertices, this.props.edges));
+        
+    };
+
     componentDidUpdate = (prevProps) => { 
         console.log("Component did update");
         console.log("Prev props: ", prevProps);
@@ -206,7 +211,10 @@ class ThreeScene extends Component {
             this.scene.remove(this.scene.children[0]); 
         }
         // add arrows to the scene
+        this.scene.add(this.light);
+        this.scene.add(this.pointLight);
         this.addLatticeVectors();
+        this.addSpinModel();
     };
 
     render(){
