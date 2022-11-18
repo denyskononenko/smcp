@@ -120,9 +120,6 @@ class CrystalEnvironment:
             chemcomp_self  = self.chem_composition
             chemcomp_other = other.chem_composition
 
-            print(f'Dist self: {dist_cu_cu_self}\t dist other: {dist_cu_cu_other}')
-            print(f'Chem comp self: {chemcomp_self}, other: {chemcomp_other}')
-
             if (dist_cu_cu_diff <= cu_cu_threshold) and\
                (len(atoms_self) == len(atoms_other)) and\
                (chemcomp_self == chemcomp_other):
@@ -161,7 +158,7 @@ class SpinModel:
         return superstructure
 
     @property
-    def cu_sites(self):
+    def cu_sites(self) -> PeriodicSite:
         """Select Cu2+ stes from the upscaled unit cell."""
         cu_sites = [] # list to store Cu2+ sites        
                 
@@ -169,7 +166,6 @@ class SpinModel:
         for site in self.superstructure:
             if get_site_Z(site) == 29 and get_site_OxN(site) == 2:
                 cu_sites.append(site)
-        print(type(cu_sites[1]))
         return cu_sites
 
     @property
@@ -184,7 +180,7 @@ class SpinModel:
     
     @property
     def exchanges(self):
-        return [self.descr2hop(self.env2descr(env)) for env in self.cu_envs]
+        return [round(1e+3 * self.descr2hop(self.env2descr(env)), 2) for env in self.cu_envs]
     
     @property
     def distances(self):
@@ -246,7 +242,6 @@ class SpinModel:
         descr = zernike3d_descriptor_invariant(img3d, self.basis, self.nmax)  # [[n, l, Coeff], ...]
 
         X = np.array([[dist] + [_[2] for _ in descr]])
-        print(f'Predictors: {len(X)}')
         return X
     
     def descr2hop(self, descr: list):
@@ -354,13 +349,19 @@ def descr2hop(descr: list) -> float:
     Y_pred = scaler_Y.inverse_transform(Y_pred.reshape(-1, 1))
     return Y_pred
 
+def get_basis4prod():
+    basis_size = calc_basis_size(_N_MAX_)
+    basis = load_basis(basis_path, basis_size)
+    return basis
+
+
 if __name__ == "__main__":
-    cif_path = '/home/denys/Documents/ifw/smc/data/raw/531.cif'
+    # cif_path = '/home/denys/Documents/ifw/smc/data/raw/531.cif'
+    cif_path = '/home/denys/Documents/ifw/smc/data/raw/81457.cif'
 
     struct = Structure.from_file(cif_path)
     scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
-    basis_size = calc_basis_size(_N_MAX_)
-    basis = load_basis(basis_path, basis_size)
+    basis = get_basis4prod()
 
     test_spin_model = SpinModel(struct, basis, scaler_X, scaler_Y, feat_selector, loaded_model)
 
