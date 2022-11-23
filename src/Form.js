@@ -1,7 +1,9 @@
 import React, {Component} from "react";
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import ThreeScene from './Scene.js';
 import Summary from "./Summary.js";
+import { FlareSharp } from "@mui/icons-material";
 
 const testVertices = [[2, 2, 0], [2, 3, 0], [2, 4, 0], [2, 2, 1], [2, 3, 1], [2, 4, 1]];
 const testExchanges = [0.5, 0.1]
@@ -16,12 +18,15 @@ class Form extends Component {
         super(props);
         this.state = {
             file: null,
+            isSpinModelCalculated: false,
+            isUploadPending: false, 
             fileName: "no files selected yet",
-            vertices: testVertices,
-            edges: testEdges,
+            lattice: testLattice,
             exchanges: testExchanges,
             distances: testDistances,
-            lattice: testLattice
+            vertices: testVertices,
+            edges: testEdges,
+            errorMessage: ""
         }
     };
 
@@ -36,6 +41,9 @@ class Form extends Component {
     };
 
     handleFileSubmit = () => {
+        // 
+        this.setState({isUploadPending: true});
+
         const data = new FormData();
         // assemble the responce data
         data.append('file', this.state.file);
@@ -51,13 +59,45 @@ class Form extends Component {
             distances: data.distances, 
             vertices: data.vertices,
             edges: data.edges, 
-             });
+            isSpinModelCalculated: data.status, 
+            errorMessage: data.error,
+            isUploadPending: false
+            });
             console.log("Submit is invoked");
             console.log(this.state);
         });
     };
 
     render(){
+        const isSpinModelCalculated = this.state.isSpinModelCalculated;
+        const isUploadPending = this.state.isUploadPending;
+
+        let scene;
+        let summary;
+        let progress;
+
+        if (isUploadPending) {
+            progress = <CircularProgress />;
+        } else {
+            progress = null;
+        }
+
+        if (isSpinModelCalculated) {
+            scene = <ThreeScene
+                        lattice={this.state.lattice}
+                        exchanges={this.state.exchanges}
+                        distances={this.state.distances}
+                        vertices={this.state.vertices} 
+                        edges={this.state.edges} />;
+            summary = <Summary 
+                        exchanges={this.state.exchanges}
+                        distances={this.state.distances}
+                        />;
+        } else {
+            scene = <p></p>
+            summary = <p>{this.state.errorMessage}</p>;
+        }
+
         return(
             <div className="FormWrapper">
                 <h3>Spin Models for Cuprates Predictor</h3>
@@ -74,9 +114,16 @@ class Form extends Component {
                     <Button variant="text" component="span" size="small">Select cif file</Button>
                     </label>
                     <p style={{display: "inline-block"}}>{this.state.fileName}</p>
-                    <Button disabled={this.state.file === null} variant="contained" size="small" onClick={this.handleFileSubmit}>Upload</Button>
+                    <Button 
+                        disabled={this.state.file === null || this.state.isUploadPending} 
+                        variant="contained" 
+                        size="small" 
+                        onClick={this.handleFileSubmit}>Upload</Button>
+                    {progress}
                 </div>
-                <ThreeScene
+                {scene}
+                {summary}
+                {/* <ThreeScene
                     lattice={this.state.lattice}
                     exchanges={this.state.exchanges}
                     distances={this.state.distances}
@@ -85,7 +132,7 @@ class Form extends Component {
                 <Summary 
                     exchanges={this.state.exchanges}
                     distances={this.state.distances}
-                    />
+                    /> */}
             </div>
         )
     };

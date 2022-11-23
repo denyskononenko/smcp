@@ -14,26 +14,27 @@ class ThreeScene extends Component {
         // init light 
         this.light = new THREE.AmbientLight("#ffffff", 1);
         this.pointLight = new THREE.PointLight("#ffffff", 1, 1000);
-        this.pointLight.position.set(20, 20, 20);
+        this.pointLight.position.set(30, 30, 30);
         this.pointLight.castShadow = true;
-        this.scene.add(this.light);
-        this.scene.add(this.pointLight);
-
         // renderer
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(sizes.width, sizes.height);
         this.mount.appendChild(this.renderer.domElement);
         // camera
         this.camera = new THREE.PerspectiveCamera(90, sizes.width / sizes.height, 0.05, 100);
-        this.camera.position.set(15, 15, 15);
+        this.camera.position.set(20, 20, 20);
         //controls
         const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         // configure controls constrains for maximal zoom in/out in angstroms
-        controls.maxDistance = 20;
+        controls.maxDistance = 30;
         controls.minDistance = 6;
 
+        // add objects to the scene 
+        this.scene.add(this.light);
+        this.scene.add(this.pointLight);
         this.addLatticeVectors();
+        this.addSpinModel();
         
         // start rendering
         this.renderScene();
