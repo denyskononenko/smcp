@@ -33,6 +33,8 @@ def get_spin_model():
         response["distances"] = spin_model.distances
         response["vertices"] = spin_model.vertices
         response["edges"] = spin_model.edges
+        response["error"] = ''
+        response["status"] = True
     except:
         response["error"] = "Error message"
         print("An exception occured")
