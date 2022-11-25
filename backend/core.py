@@ -6,8 +6,9 @@ import numpy as np
 from numpy.linalg import norm
 
 from pymatgen.core.sites import PeriodicSite
-from pymatgen.core.structure import Structure  
-from utils import *
+from pymatgen.core.structure import Structure
+from pymatgen.io.cif import CifParser
+from utils import timeit, calc_basis_size, load_basis, make_3d_img, zernike3d_descriptor, zernike3d_descriptor_invariant
 
 _N_MAX_ = 25
 # path
@@ -256,9 +257,6 @@ class SpinModel:
         Y_pred = self.scaler_Y.inverse_transform(Y_pred.reshape(-1, 1))
         return Y_pred.flatten()[0]
 
-def validate_cif(cif_file: str):
-    pass
-
 @timeit
 def struct2env(structure: Structure, r_max: float) -> list:
     """ 
@@ -354,21 +352,44 @@ def get_basis4prod():
     basis = load_basis(basis_path, basis_size)
     return basis
 
+def validate_cif(cif_file: str) -> tuple:
+    """
+    Perform validation of the cif file.
+    Returns:
+        (tuple): (bool, str), is cif valid, and message:
+        (True, 'The cif file is valid')
+        (False, 'The cif file does not have the oxidation numbers')
+        (False, 'Can not parse the cif file')
+    """
+    try:
+        structure = Structure.from_file(cif_file)
+        for site in structure: 
+            if 'oxidation_state' not in site.as_dict()['species'][0]:
+                return (False, 'The cif file does not have the oxidation numbers')
+    except Exception:
+        return (False, 'Can not parse the cif file')
+    return (True, 'The cif file is valid')
 
 if __name__ == "__main__":
     # cif_path = '/home/denys/Documents/ifw/smc/data/raw/531.cif'
     cif_path = '/home/denys/Documents/ifw/smc/data/raw/81457.cif'
+    corrupt_cif = '/home/denys/Documents/ifw/smc/data/test_app/invalid-corrupt.cif'
+    nooxi_cif = '/home/denys/Documents/ifw/smc/data/test_app/invalid-no-oxi.cif'
 
-    struct = Structure.from_file(cif_path)
-    scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
-    basis = get_basis4prod()
+    print(validate_cif(cif_path))
+    print(validate_cif(corrupt_cif))
+    print(validate_cif(nooxi_cif))
 
-    test_spin_model = SpinModel(struct, basis, scaler_X, scaler_Y, feat_selector, loaded_model)
+    #struct = Structure.from_file(cif_path)
+    #scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
+    #basis = get_basis4prod()
 
-    print(test_spin_model.distances)
-    print(test_spin_model.exchanges)
-    print(test_spin_model.edges)
-    print(test_spin_model.edges)
+    #test_spin_model = SpinModel(struct, basis, scaler_X, scaler_Y, feat_selector, loaded_model)
+
+    #print(test_spin_model.distances)
+    #print(test_spin_model.exchanges)
+    #print(test_spin_model.edges)
+    #print(test_spin_model.edges)
 
     #envs = struct2env(struct, 6.0)
     #test_env = envs[0]

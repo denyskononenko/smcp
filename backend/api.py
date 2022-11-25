@@ -2,7 +2,7 @@ import os
 import time
 from flask import Flask, request
 from pymatgen.core.structure import Structure  
-from core import *
+from core import load_ml, get_basis4prod, SpinModel, validate_cif
 
 app = Flask(__name__)
 # load basis and model 
@@ -25,7 +25,12 @@ def get_spin_model():
         "error"    : None
     }
 
-    try:
+    check_status, check_message = validate_cif(UPLOAD_PATH)
+
+    response["error"] = check_message
+    response["status"] = check_status
+
+    if check_status:
         structure = Structure.from_file(UPLOAD_PATH)
         spin_model = SpinModel(structure, basis, scaler_X, scaler_Y, feat_selector, model)
         response["lattice"] = structure.lattice.matrix.tolist()
@@ -33,11 +38,9 @@ def get_spin_model():
         response["distances"] = spin_model.distances
         response["vertices"] = spin_model.vertices
         response["edges"] = spin_model.edges
-        response["error"] = ''
-        response["status"] = True
-    except:
-        response["error"] = "Error message"
-        print("An exception occured")
 
+    print(f'Strcture is valid: {check_status}')
+    print(check_message)
     print(response)
+
     return response
