@@ -223,8 +223,14 @@ class SpinModel:
         print(f'Couplings in the supercell:')
         for _ in cu_couplings:
             print(_)
+        
+        # sort local environments by the Cu..Cu distance 
+        sorted_cu_envs_indexed = sorted(enumerate(cu_envs), key=lambda env: env[1].cu_cu_dist)
+        sorted_cu_envs = [_[1] for _ in sorted_cu_envs_indexed]
+        cu_envs_old_indices = [_[0] for _ in sorted_cu_envs_indexed]
+        sorted_cu_couplings = [cu_couplings[_] for _ in cu_envs_old_indices]
 
-        return cu_envs, cu_couplings
+        return sorted_cu_envs, sorted_cu_couplings
     
     def env2descr(self, env: CrystalEnvironment) -> list:
         """
