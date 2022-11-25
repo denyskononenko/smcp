@@ -100,9 +100,13 @@ class Form extends Component {
 
         return(
             <div className="FormWrapper">
-                <h3>Spin Models for Cuprates Predictor</h3>
-                <p>This application estimates transfer integrals between Cu2+ sites in undoped cuprates.</p>
-                <p>Select .cif file of cuprate structure you are interested in.</p>
+                
+                <div className="IntroTextWrapper">
+                    <h3>Spin Models for Cuprates Predictor</h3>
+                    <p>This application estimates transfer integrals between Cu2+ sites in undoped cuprates. Uploaded cif file should contain oxidation numbers of sites.</p>
+                    <p>Select .cif file of cuprate structure you are interested in.</p>
+                </div>
+
                 <div className="fileUploadWrapper">
                     <input 
                         type="file" 
