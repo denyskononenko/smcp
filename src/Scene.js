@@ -39,11 +39,25 @@ class ThreeScene extends Component {
         // start rendering
         this.renderScene();
         this.startAnimation();
+
+        // add event listener on resize
+        window.addEventListener('resize', this.handleResize, false);
     };
 
     componentWillUnmount() {
         //this.stopAnimation();
         this.mount.removeChild(this.renderer.domElement);
+        window.removeEventListener('resize', this.handleResize, false);
+    };
+
+    handleResize = () => {
+        const newSizes = {width: this.mount.clientWidth, height: this.mount.clientHeight};
+        this.camera.aspect = newSizes.width / newSizes.height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(newSizes.width, newSizes.height);
+
+
+        console.log('Window resized: ', this.mount.clientWidth);
     };
 
     startAnimation = () => {
@@ -162,7 +176,7 @@ class ThreeScene extends Component {
         let edges3DObj = [];
         // create 3D objects for vertices
         vertices.forEach((position) => {
-            vertices3DObj.push(this.makeAtom(position, 0.25, "#ffffff"));
+            vertices3DObj.push(this.makeAtom(position, 0.4, "#ffffff"));
         });
         // create 3D objects for exchanges
         exchanges.forEach((edges, exchangeIndex) => {
