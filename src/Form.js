@@ -10,7 +10,7 @@ const testExchanges = [0.5, 0.1]
 const testDistances = [3, 3]
 const testEdges = [[[0, 1], [1, 2], [3, 4], [4, 5]], [[0, 3], [1, 4], [2, 5]]];
 const testLattice =  [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-
+const testFormula = "Cu2(SO4)2";
 
 class Form extends Component {
 
@@ -21,6 +21,7 @@ class Form extends Component {
             isSpinModelCalculated: false,
             isUploadPending: false, 
             fileName: "no files selected yet",
+            formula: testFormula,
             lattice: testLattice,
             exchanges: testExchanges,
             distances: testDistances,
@@ -54,6 +55,7 @@ class Form extends Component {
         })
         .then(response => response.json())
         .then(data => { this.setState({
+            formula: data.formula,
             lattice: data.lattice,
             exchanges: data.exchanges,
             distances: data.distances, 
@@ -90,6 +92,7 @@ class Form extends Component {
                         vertices={this.state.vertices} 
                         edges={this.state.edges} />;
             summary = <Summary 
+                        formula={this.state.formula}
                         exchanges={this.state.exchanges}
                         distances={this.state.distances}
                         />;

@@ -17,6 +17,7 @@ def get_spin_model():
     f.save(UPLOAD_PATH)
 
     response = {
+        "formula"  : None,
         "lattice"  : None,
         "exchanges": None,
         "distances": None,
@@ -33,6 +34,7 @@ def get_spin_model():
     if check_status:
         structure = Structure.from_file(UPLOAD_PATH)
         spin_model = SpinModel(structure, basis, scaler_X, scaler_Y, feat_selector, model)
+        response["formula"] = structure.formula
         response["lattice"] = structure.lattice.matrix.tolist()
         response["exchanges"] = spin_model.exchanges
         response["distances"] = spin_model.distances

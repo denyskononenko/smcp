@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Brightness1Icon from '@mui/icons-material/Brightness1';
 import ExchangeColors from "./declarations.js"
+import parse from 'html-react-parser';
 
 class Summary extends Component {
 
@@ -27,11 +28,15 @@ class Summary extends Component {
         return rows;
     }
 
+    formatChemFormula = (formula) => {
+        return formula.replaceAll(/\d+/g, "<sub>$&</sub>");
+    }
+
     render(){
         console.log(this.props)
         return(
             <div className="summaryWrapper">
-                <p>Number of determined transfer integrals: {this.props.exchanges.length}</p>
+                <p>{parse(this.formatChemFormula(this.props.formula))}, number of determined transfer integrals: {this.props.exchanges.length}</p>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 400 }} size="small" aria-label="a dense table">
                         <TableHead>
