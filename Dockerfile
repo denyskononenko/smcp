@@ -1,7 +1,7 @@
 # build react front end 
 FROM node:latest as build-step
-WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+WORKDIR /smcp
+ENV PATH /smcp/node_modules/.bin:$PATH
 COPY package.json ./
 COPY ./src ./src 
 COPY ./public ./public
@@ -9,15 +9,29 @@ RUN yarn install
 RUN yarn build 
 
 # build flask backend
-# FROM python:3.9
-# WORKDIR /app
-# COPY --from=build-step /app/build ./build
+FROM python:3.8
+WORKDIR /smcp
+COPY --from=build-step /smcp/build ./build
 
-# RUN mkdir ./backend
-# COPY backend/requirements.txt backend/.flaskenv  backend/api.py ./backend/
-# COPY backend/ionrad.json backend/core.py backend/utils.py backend/zernike3d.py ./backend/
-# RUN pip install -r ./backend/requirements.txt
-# ENV FLASK_ENV production
+# copy backend files
+RUN mkdir ./backend
+RUN mkdir ./backend/cif/
+COPY backend/requirements.txt backend/.flaskenv  backend/api.py ./backend/
+COPY backend/ionrad.json backend/core.py backend/utils.py backend/zernike3d.py ./backend/
+# copy ml core files
+RUN mkdir ./backend/ml
+COPY backend/ml/envs_r4_h0.005_f0.1+test backend/ml/envs_r4_h0.005_f0.1+test
+COPY backend/ml/serialize_model.py backend/ml/dataset.py ./backend/ml/ 
+RUN mkdir ./backend/ml/model
+# install dependencies
+RUN pip3 install -U pip
+RUN pip3 install -r ./backend/requirements.txt
+# train and serialize ml pipeline steps
+RUN python3 ./backend/ml/serialize_model.py
+# copy basis 
+COPY backend/basis backend/basis
+ENV FLASK_ENV production
 
 EXPOSE 3000
-# WORKDIR /backend/api
+WORKDIR /smcp/backend
+CMD ["gunicorn", "--timeout", "200", "-b", ":3000", "api:app"]
