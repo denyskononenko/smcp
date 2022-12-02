@@ -6,11 +6,11 @@ import ExchangeColors from "./declarations.js"
 class ThreeScene extends Component {
 
     componentDidMount(){
-        // const backgroundColor = "#C0C0C0";
+        const backgroundColor = "#21232b";
         const sizes = {width: this.mount.clientWidth, height: this.mount.clientHeight};
         // scene
         this.scene = new THREE.Scene();
-        // this.scene.background = new THREE.Color( backgroundColor );
+        this.scene.background = new THREE.Color( backgroundColor );
         // init light 
         this.light = new THREE.AmbientLight("#ffffff", 1);
         this.pointLight = new THREE.PointLight("#ffffff", 1, 1000);
@@ -27,8 +27,8 @@ class ThreeScene extends Component {
         const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         // configure controls constrains for maximal zoom in/out in angstroms
-        controls.maxDistance = 30;
-        controls.minDistance = 6;
+        controls.maxDistance = 50;
+        controls.minDistance = 20;
 
         // add objects to the scene 
         this.scene.add(this.light);

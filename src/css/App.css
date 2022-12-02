@@ -1,36 +1,10 @@
 .App {
   text-align: center;
+  background-color: #494D5f
 }
 
-.App-header {
-  background-color: #1A1D21;
-  height: 3em;
-  position: relative;
-  right: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.App-header a {
-  float: left;
-  display: block;
-  color: #ffffff;
-  text-align: center;
-  padding: 0.25em;
+a {
   text-decoration: none;
-  font-size: 17px;
-  height: 100%;
-  border-bottom: 3px solid transparent;
-}
-
-.App-header a:hover {
-  border-bottom: 3px solid rgb(0, 90, 255);
-}
-
-.App-header a.active {
-  border-bottom: 3px solid rgb(0, 90, 255);
 }
 
 .mainContainer {
@@ -50,17 +24,27 @@
   align-items: center
 }
 
-.IntroTextWrapper {
+.BoxWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 4px;
 }
 
-.fileUploadWrapper { 
-  vertical-align: center;
-  justify-content: center;
-  display: grid;
-  grid-template-columns: 100px 300px 200px 100px;
-  gap: 10px;
-  margin: 10px;
-  height: 20%;
+.TextBox {
+  text-align: justify;
+  width: 80%;
+}
+
+h3 {
+  text-align: center;
+}
+
+.TruncatedText {
+  width: 20ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: "inline-block";
 }
 
 .sceneWrapper {
