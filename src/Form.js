@@ -1,16 +1,11 @@
 import React, {Component} from "react";
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Stack from '@mui/material/Stack';
 import ThreeScene from './Scene.js';
 import Summary from "./Summary.js";
-import { FlareSharp } from "@mui/icons-material";
-
-const testVertices = [[2, 2, 0], [2, 3, 0], [2, 4, 0], [2, 2, 1], [2, 3, 1], [2, 4, 1]];
-const testExchanges = [0.5, 0.1]
-const testDistances = [3, 3]
-const testEdges = [[[0, 1], [1, 2], [3, 4], [4, 5]], [[0, 3], [1, 4], [2, 5]]];
-const testLattice =  [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-const testFormula = "Cu2(SO4)2";
+import SendIcon from '@mui/icons-material/Send';
+import Alert from '@mui/material/Alert';
 
 class Form extends Component {
 
@@ -19,15 +14,15 @@ class Form extends Component {
         this.state = {
             file: null,
             isSpinModelCalculated: false,
-            isUploadPending: false, 
+            loading: false, 
             fileName: "no files selected yet",
-            formula: testFormula,
-            lattice: testLattice,
-            exchanges: testExchanges,
-            distances: testDistances,
-            vertices: testVertices,
-            edges: testEdges,
-            errorMessage: ""
+            formula: null,
+            lattice: null,
+            exchanges: null,
+            distances: null,
+            vertices: null,
+            edges: null,
+            errorMessage: null
         }
     };
 
@@ -43,7 +38,7 @@ class Form extends Component {
 
     handleFileSubmit = () => {
         // 
-        this.setState({isUploadPending: true});
+        this.setState({loading: true});
 
         const data = new FormData();
         // assemble the responce data
@@ -63,7 +58,7 @@ class Form extends Component {
             edges: data.edges, 
             isSpinModelCalculated: data.status, 
             errorMessage: data.error,
-            isUploadPending: false
+            loading: false
             });
             console.log("Submit is invoked");
             console.log(this.state);
@@ -72,18 +67,10 @@ class Form extends Component {
 
     render(){
         const isSpinModelCalculated = this.state.isSpinModelCalculated;
-        const isUploadPending = this.state.isUploadPending;
 
         let scene;
         let summary;
-        let progress;
-
-        if (isUploadPending) {
-            progress = <CircularProgress />;
-        } else {
-            progress = null;
-        }
-
+       
         if (isSpinModelCalculated) {
             scene = <ThreeScene
                         lattice={this.state.lattice}
@@ -96,50 +83,57 @@ class Form extends Component {
                         exchanges={this.state.exchanges}
                         distances={this.state.distances}
                         />;
-        } else {
+        } else if (this.state.errorMessage !== null) {
             scene = <p></p>
-            summary = <p>{this.state.errorMessage}</p>;
+            summary = <div className="BoxWrapper">
+                        <Alert severity="error" variant="filled">{this.state.errorMessage}</Alert>
+                    </div>
         }
 
         return(
             <div className="FormWrapper">
                 
-                <div className="IntroTextWrapper">
-                    <h3>Spin Models for Cuprates Predictor</h3>
-                    <p>This application estimates transfer integrals between Cu2+ sites in undoped cuprates. Uploaded cif file should contain oxidation numbers of sites.</p>
-                    <p>Select .cif file of cuprate structure you are interested in.</p>
+                <div className="BoxWrapper">
+                    <div className="TextBox">
+                        <h3>Spin Models for Cuprates Predictor</h3>
+                        <p>This application estimates transfer integrals between Cu2+ sites in undoped cuprates. Uploaded cif file should contain oxidation numbers of sites.</p>
+                        <p>Select .cif file of cuprate structure you are interested in.</p>
+                    </div>
                 </div>
 
-                <div className="fileUploadWrapper">
-                    <input 
-                        type="file" 
-                        id="file-upload" 
-                        onChange={this.handleFileChange} 
-                        style={{display: "none"}} 
-                        accept=".cif"/>
-                    <label className="uploadButton" htmlFor="file-upload">
-                    <Button variant="text" component="span" size="small">Select cif file</Button>
-                    </label>
-                    <p style={{display: "inline-block"}}>{this.state.fileName}</p>
-                    <Button 
-                        disabled={this.state.file === null || this.state.isUploadPending} 
-                        variant="contained" 
-                        size="small" 
-                        onClick={this.handleFileSubmit}>Upload</Button>
-                    {progress}
+                <div className="BoxWrapper">
+                    <Stack spacing={2} direction="row">
+                        <input 
+                            type="file" 
+                            id="file-upload" 
+                            onChange={this.handleFileChange} 
+                            style={{display: "none"}} 
+                            accept=".cif"/>
+                        <label className="uploadButton" htmlFor="file-upload">
+                        <Button 
+                            variant="text" 
+                            component="span"
+                            size="small">
+                            Select cif
+                        </Button>
+                        </label>
+                        <p className="TruncatedText">{this.state.fileName}</p>
+                        <LoadingButton
+                            size="small"
+                            disabled={this.state.file === null || this.state.isUploadPending}
+                            onClick={this.handleFileSubmit}
+                            endIcon={<SendIcon />}
+                            loading={this.state.loading}
+                            loadingPosition="end"
+                            variant="contained">
+                            Send cif
+                        </LoadingButton>
+                    </Stack>
                 </div>
+
                 {scene}
                 {summary}
-                {/* <ThreeScene
-                    lattice={this.state.lattice}
-                    exchanges={this.state.exchanges}
-                    distances={this.state.distances}
-                    vertices={this.state.vertices} 
-                    edges={this.state.edges} />
-                <Summary 
-                    exchanges={this.state.exchanges}
-                    distances={this.state.distances}
-                    /> */}
+
             </div>
         )
     };
