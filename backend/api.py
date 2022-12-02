@@ -4,12 +4,22 @@ from flask import Flask, request
 from pymatgen.core.structure import Structure  
 from core import load_ml, get_basis4prod, SpinModel, validate_cif
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../build', static_url_path='/')
+
 # load basis and model 
 scaler_X, scaler_Y, feat_selector, model = load_ml()
 basis = get_basis4prod()
 
-UPLOAD_PATH = os.getcwd() + "/cif/temp.cif"
+__file_dir__ = '/'.join(__file__.split('/')[:-1])
+__buffer_dir__ = f'{__file_dir__}/cif'
+if not os.path.isdir(__buffer_dir__):
+    os.mkdir(__buffer_dir__)
+    
+UPLOAD_PATH = f"{__buffer_dir__}/temp.cif"
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 @app.route('/upload', methods=['POST'])
 def get_spin_model():
@@ -30,7 +40,7 @@ def get_spin_model():
 
     response["error"] = check_message
     response["status"] = check_status
-
+    
     if check_status:
         structure = Structure.from_file(UPLOAD_PATH)
         spin_model = SpinModel(structure, basis, scaler_X, scaler_Y, feat_selector, model)
