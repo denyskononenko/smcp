@@ -95,7 +95,6 @@ class Form extends Component {
                 
                 <div className="BoxWrapper">
                     <div className="TextBox">
-                        <h3>Spin Models for Cuprates Predictor</h3>
                         <p>This application estimates transfer integrals between Cu2+ sites in undoped cuprates. Uploaded cif file should contain oxidation numbers of sites.</p>
                         <p>Select .cif file of cuprate structure you are interested in.</p>
                     </div>
@@ -113,13 +112,13 @@ class Form extends Component {
                         <Button 
                             variant="text" 
                             component="span"
-                            size="small">
+                            size="medium">
                             Select cif
                         </Button>
                         </label>
                         <p className="TruncatedText">{this.state.fileName}</p>
                         <LoadingButton
-                            size="small"
+                            size="medium"
                             disabled={this.state.file === null || this.state.isUploadPending}
                             onClick={this.handleFileSubmit}
                             endIcon={<SendIcon />}
