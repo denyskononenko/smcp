@@ -16,6 +16,7 @@ import Select from '@mui/material/Select';
 import Paper from "@mui/material/Paper";
 import Container from '@mui/material/Container';
 import Slider from '@mui/material/Slider';
+import parse from 'html-react-parser';
 import { styled } from "@mui/material/styles";
 
 const testStructures = [
@@ -232,7 +233,9 @@ class Form extends Component {
                                 <MenuItem
                                 key={structure.id}
                                 value={structure.id}>
-                                {structure.name}
+                                <Typography variant="subtitle2" gutterBottom>
+                                {parse(structure.name.replaceAll(/\d+/g, "<sub>$&</sub>"))}
+                                </Typography>
                                 </MenuItem>
                             ))}
                         </Select>
