@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Brightness1Icon from '@mui/icons-material/Brightness1';
+import Typography from '@mui/material/Typography';
 import ExchangeColors from "./declarations.js"
 import parse from 'html-react-parser';
 
@@ -36,7 +37,9 @@ class Summary extends Component {
         console.log(this.props)
         return(
             <div className="summaryWrapper">
-                <p>{parse(this.formatChemFormula(this.props.formula))}, number of determined transfer integrals: {this.props.exchanges.length}</p>
+                <Typography variant="body1" gutterBottom>
+                    {parse(this.formatChemFormula(this.props.formula))}, number of determined transfer integrals: {this.props.exchanges.length}
+                </Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 400 }} size="small" aria-label="a dense table">
                         <TableHead>

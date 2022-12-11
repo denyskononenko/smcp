@@ -15,14 +15,22 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Paper from "@mui/material/Paper";
 import Container from '@mui/material/Container';
+import Slider from '@mui/material/Slider';
 import { styled } from "@mui/material/styles";
 
 const testStructures = [
     {id: "532", name: "Ca2 (Cu Br2 O2)"},
     {id: "4154", name: "K2 Cu (N H C O N H C O N H)2 (H2 O)4"},
     {id: "80576", name: "Cu Sb2 O6"},
-    {id: "51713", name: "Sr3 Cu3 (P O4)4"},
-]
+    {id: "84173", name: "Sr3 Cu3 (P O4)4"},
+];
+
+const sliderMarks = [
+    {value: 4, label: '4 Å'},
+    {value: 5, label: '5 Å'},
+    {value: 6, label: '6 Å'},
+    {value: 7, label: '7 Å'},
+];
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -39,6 +47,7 @@ class Form extends Component {
         this.state = {
             testStructure: "",
             testStructureId: "",
+            maxR: 6,
             file: null,
             fileName: "no files selected",
             isSpinModelCalculated: false,
@@ -68,6 +77,8 @@ class Form extends Component {
         // assemble the responce data
         const data = new FormData();
         data.append('id', this.state.testStructureId);
+        data.append('maxR', this.state.maxR);
+
         console.log(data);
 
         fetch('/process_test_cif', {
@@ -109,6 +120,7 @@ class Form extends Component {
         const data = new FormData();
         // assemble the responce data
         data.append('file', this.state.file);
+        data.append('maxR', this.state.maxR);
         
         fetch('/upload', {
         method: 'POST',
@@ -131,6 +143,22 @@ class Form extends Component {
         });
     };
 
+    handleSliderChange = (event, newValue) => {
+        console.log('Slider change: ', newValue);
+        this.setState({
+            maxR: newValue,
+        });
+        console.log('Slider change state: ', this.state.maxR);
+    };
+
+    valuetext = (value) => {
+        return `${value} Å`;
+      }
+      
+    valueLabelFormat = (value) => {
+        return sliderMarks.findIndex((mark) => mark.value === value) + 1;
+      }
+
     render(){
         const isSpinModelCalculated = this.state.isSpinModelCalculated;
 
@@ -147,8 +175,7 @@ class Form extends Component {
             summary = <Summary 
                         formula={this.state.formula}
                         exchanges={this.state.exchanges}
-                        distances={this.state.distances}
-                        />;
+                        distances={this.state.distances}/>;
         } else if (this.state.errorMessage !== null) {
             scene = <p></p>
             summary = <div className="BoxWrapper">
@@ -163,19 +190,33 @@ class Form extends Component {
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                     <Item>
-                        {/* <Typography variant="subtitle2" gutterBottom>
-                        Description
-                        </Typography> */}
-                        <Typography variant="body2" gutterBottom>
-                        This application estimates transfer integrals between Cu2+ sites in undoped cuprates. 
+                        <Typography variant="body1" gutterBottom>
+                        This application estimates transfer integral aka hopping between Cu2+ sites in undoped cuprates. 
                         Uploaded cif file should contain oxidation numbers of sites. 
                         Select one of the structures from the database as illustrative example or upload .cif file of cuprate structure from your computer.
                         </Typography>
+                        <Typography variant="subtitle2" gutterBottom>
+                        Maximum hopping distance
+                        </Typography>
+                        <Stack spacing={2} direction="row" justifyContent="center">
+                        <Box sx={{ width: 300 }}>
+                        <Slider
+                            aria-label="Restricted values"
+                            value={this.state.maxR}
+                            onChange={this.handleSliderChange}
+                            getAriaValueText={this.valuetext}
+                            step={0.5}
+                            min={4}
+                            max={7}
+                            valueLabelDisplay="auto"
+                            marks={sliderMarks}/>
+                        </Box>
+                        </Stack>
                     </Item>
                     </Grid>
                     <Grid item xs={6}>
                     <Item>
-                        <Typography variant="subtitle2" gutterBottom>
+                        <Typography variant="subtitle1" gutterBottom>
                         Use structure from database
                         </Typography>
                         <Stack spacing={2} direction="row" justifyContent="center">
@@ -211,7 +252,7 @@ class Form extends Component {
                     </Grid>
                     <Grid item xs={6}>
                     <Item>
-                        <Typography variant="subtitle2" gutterBottom>
+                        <Typography variant="subtitle1" gutterBottom>
                         Upload my cif file
                         </Typography>
                         <Container>
