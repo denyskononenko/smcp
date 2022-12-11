@@ -18,9 +18,12 @@ if not os.path.isdir(__buffer_dir__):
 UPLOAD_PATH = f"{__buffer_dir__}/temp.cif"
 TEST_PATH = f"{__buffer_dir__}/test/"
 
-def get_spin_model_response(cif_file: str) -> dict:
+def get_spin_model_response(cif_file: str, maxR: float) -> dict:
     """
     Make response with spin model description.
+    Args:
+        cif_file: (str) path of the target cif file 
+        maxR: (float) maximal hopping distance, i.e. Cu..Cu distance
     Response specification:
     {
         "formula"  : (str),
@@ -53,7 +56,7 @@ def get_spin_model_response(cif_file: str) -> dict:
     
     if check_status:
         structure = Structure.from_file(cif_file)
-        spin_model = SpinModel(structure, basis, scaler_X, scaler_Y, feat_selector, model)
+        spin_model = SpinModel(structure, basis, scaler_X, scaler_Y, feat_selector, model, maxR)
         response["formula"] = structure.formula
         response["lattice"] = structure.lattice.matrix.tolist()
         response["exchanges"] = spin_model.exchanges
@@ -75,19 +78,25 @@ def index():
 # endpoint for processing of custom cif file
 @app.route('/upload', methods=['POST'])
 def process_user_spin_model():
+    maxR = float(request.form.get('maxR'))
     f = request.files['file']
     f.save(UPLOAD_PATH)
 
-    response = get_spin_model_response(UPLOAD_PATH)
+    print(f'maxR: {maxR}')
+
+    response = get_spin_model_response(UPLOAD_PATH, maxR)
 
     return response
 
 # endpoint for processing of the test structure from database
 @app.route('/process_test_cif', methods=['POST'])
 def process_test_spin_model():
+    maxR = float(request.form.get('maxR'))
     test_cif_id = request.form.get('id')
     test_cif_file = f"{TEST_PATH}{test_cif_id}.cif"
 
-    response = get_spin_model_response(test_cif_file)
+    print(f'maxR: {maxR}')
+
+    response = get_spin_model_response(test_cif_file, maxR)
 
     return response
