@@ -6,24 +6,90 @@ import ThreeScene from './Scene.js';
 import Summary from "./Summary.js";
 import SendIcon from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Paper from "@mui/material/Paper";
+import Container from '@mui/material/Container';
+import { styled } from "@mui/material/styles";
+
+const testStructures = [
+    {id: "532", name: "Ca2 (Cu Br2 O2)"},
+    {id: "4154", name: "K2 Cu (N H C O N H C O N H)2 (H2 O)4"},
+    {id: "80576", name: "Cu Sb2 O6"},
+    {id: "51713", name: "Sr3 Cu3 (P O4)4"},
+]
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary
+  }));
 
 class Form extends Component {
 
     constructor(props){
         super(props);
         this.state = {
+            testStructure: "",
+            testStructureId: "",
             file: null,
+            fileName: "no files selected",
             isSpinModelCalculated: false,
-            loading: false, 
-            fileName: "no files selected yet",
+            loadingTestStructure: false,
+            loadingUserStructure: false,  
             formula: null,
             lattice: null,
             exchanges: null,
             distances: null,
             vertices: null,
             edges: null,
-            errorMessage: null
+            errorMessage: null,
         }
+    };
+
+    handleTestStructureChange = (event) => {
+        this.setState({
+            testStructure: event.target.value,
+            testStructureId: event.target.value
+        });
+        console.log("TestStructure ", event.target);
+        console.log("TestStructure ", this.state.testStructure);
+    };
+
+    handleTestStructureSubmit = () => {
+        this.setState({loadingTestStructure: true});
+        // assemble the responce data
+        const data = new FormData();
+        data.append('id', this.state.testStructureId);
+        console.log(data);
+
+        fetch('/process_test_cif', {
+            method: 'POST',
+            body: data,
+            })
+            .then(response => response.json())
+            .then(data => { this.setState({
+                formula: data.formula,
+                lattice: data.lattice,
+                exchanges: data.exchanges,
+                distances: data.distances, 
+                vertices: data.vertices,
+                edges: data.edges, 
+                isSpinModelCalculated: data.status, 
+                errorMessage: data.error,
+                loadingTestStructure: false
+                });
+                console.log("Submit is invoked");
+                console.log(this.state);
+            });
+
     };
 
     handleFileChange = (event) => {
@@ -38,7 +104,7 @@ class Form extends Component {
 
     handleFileSubmit = () => {
         // 
-        this.setState({loading: true});
+        this.setState({loadingUserStructure: true});
 
         const data = new FormData();
         // assemble the responce data
@@ -58,7 +124,7 @@ class Form extends Component {
             edges: data.edges, 
             isSpinModelCalculated: data.status, 
             errorMessage: data.error,
-            loading: false
+            loadingUserStructure: false
             });
             console.log("Submit is invoked");
             console.log(this.state);
@@ -92,16 +158,64 @@ class Form extends Component {
 
         return(
             <div className="FormWrapper">
-                
-                <div className="BoxWrapper">
-                    <div className="TextBox">
-                        <p>This application estimates transfer integrals between Cu2+ sites in undoped cuprates. Uploaded cif file should contain oxidation numbers of sites.</p>
-                        <p>Select .cif file of cuprate structure you are interested in.</p>
-                    </div>
-                </div>
-
-                <div className="BoxWrapper">
-                    <Stack spacing={2} direction="row">
+            <Container maxWidth="lg">
+            <Box sx={{ flexGrow: 1, marginBottom: 2, marginTop: 3}}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                    <Item>
+                        {/* <Typography variant="subtitle2" gutterBottom>
+                        Description
+                        </Typography> */}
+                        <Typography variant="body2" gutterBottom>
+                        This application estimates transfer integrals between Cu2+ sites in undoped cuprates. 
+                        Uploaded cif file should contain oxidation numbers of sites. 
+                        Select one of the structures from the database as illustrative example or upload .cif file of cuprate structure from your computer.
+                        </Typography>
+                    </Item>
+                    </Grid>
+                    <Grid item xs={6}>
+                    <Item>
+                        <Typography variant="subtitle2" gutterBottom>
+                        Use structure from database
+                        </Typography>
+                        <Stack spacing={2} direction="row" justifyContent="center">
+                        <FormControl sx={{ minWidth: 300 }} size="small">
+                        <InputLabel id="structure-select">Select Cuprate</InputLabel>
+                        <Select
+                            labelId="structure-select"
+                            id="structure-select"
+                            value={this.state.testStructureId}
+                            label="Test structure"
+                            onChange={this.handleTestStructureChange}>
+                            {testStructures.map((structure) => (
+                                <MenuItem
+                                key={structure.id}
+                                value={structure.id}>
+                                {structure.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        </FormControl>
+                        <LoadingButton
+                            size="medium"
+                            disabled={this.state.testStructure === '' || this.state.loadingUserStructure}
+                            onClick={this.handleTestStructureSubmit}
+                            endIcon={<SendIcon />}
+                            loading={this.state.loadingTestStructure}
+                            loadingPosition="end"
+                            variant="contained">
+                            Process
+                        </LoadingButton>
+                        </Stack>
+                    </Item>
+                    </Grid>
+                    <Grid item xs={6}>
+                    <Item>
+                        <Typography variant="subtitle2" gutterBottom>
+                        Upload my cif file
+                        </Typography>
+                        <Container>
+                        <Stack spacing={2} direction="row" justifyContent="center">
                         <input 
                             type="file" 
                             id="file-upload" 
@@ -119,20 +233,24 @@ class Form extends Component {
                         <p className="TruncatedText">{this.state.fileName}</p>
                         <LoadingButton
                             size="medium"
-                            disabled={this.state.file === null || this.state.isUploadPending}
+                            disabled={this.state.file === null || this.state.loadingTestStructure}
                             onClick={this.handleFileSubmit}
                             endIcon={<SendIcon />}
-                            loading={this.state.loading}
+                            loading={this.state.loadingUserStructure}
                             loadingPosition="end"
                             variant="contained">
                             Send cif
                         </LoadingButton>
                     </Stack>
-                </div>
+                    </Container>
+                    </Item>
+                    </Grid>
+                </Grid>
+                </Box>
 
                 {scene}
                 {summary}
-
+            </Container>
             </div>
         )
     };
