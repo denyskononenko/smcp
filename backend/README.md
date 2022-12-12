@@ -1,6 +1,6 @@
-# Spin Models for Cuprates Predictor
+# Spin Models for Cuprates Predictor: Backend
 
-Setup of the backend.
+Setup of the backend for the local development.
 
 To create virtual environment:
 ```bash

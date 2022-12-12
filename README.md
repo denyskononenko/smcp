@@ -1,8 +1,24 @@
-# Getting Started with Create React App
+# SPIN MODELS FOR CUPRATES PREDICTOR
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The application estimates spin model of given cuprate structure by prediction of the transfer integrals between Cu sites.
 
-## Available Scripts
+The application is created with React + Flask.
+The Docker file specifies the image for deployment of the aplication using `gunicorn` web server. The image creation involves deployment of the frontend, setup of the backend, generation of data required for construction of the descriptors and training of the ML model and its serialization.
+
+### Deploy with Docker
+
+This app can be deployed with the Docker. The docker image requires at least 15.5 GB.
+To create docker image execute the following command in the `smcp` directory: 
+
+```docker build -f Dockerfile -t smcp .```
+
+To run the container for created image execute:
+
+```docker run --rm -p 3000:3000 smcp```
+
+This makes the app available via `http://0.0.0.0:3000` starting the gunicorn. 
+
+## Available Scripts for React
 
 In the project directory, you can run:
 
@@ -68,17 +84,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-### Deploy with Docker
-
-This app is deployed in the Docker container. 
-To create docker image execute: 
-
-```docker build -f Dockerfile -t smcp .```
-
-To run the container for created image execute:
-
-```docker run --rm -p 3000:3000 smcp```
 
 ### index.html
 
