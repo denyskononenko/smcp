@@ -95,7 +95,7 @@ if __name__ == "__main__":
     Y = dataset_pd_concat.to_numpy()[:,1].astype(float).reshape(-1,1)
     n, p = X.shape
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.80, random_state=RAND_ST)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=RAND_ST)
     
     # model serialization
     print("Model serialization")

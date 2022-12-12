@@ -32,8 +32,10 @@ def save_basis(path: str, nmax: int = 25, nmin: int = 0, ds: float = 0.025):
         print(f"{n}, {l}, {m} took {round(t2 - t1, 6)} s")
     
 if __name__ == '__main__':
-    __file_dir__ = os.getcwd() # '/'.join(__file__.split('/')[:-1])
-    basis_path = f'{__file_dir__}/basis_test/'
+    __file_dir__ = '/'.join(__file__.split('/')[:-1])
+    basis_path = f'{__file_dir__}/basis/'
+
+    print(f'saving basis in : {basis_path}')
     
     # check if directory for model serialization exists 
     if not os.path.isdir(basis_path): 
