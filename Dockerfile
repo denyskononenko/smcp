@@ -16,8 +16,9 @@ COPY --from=build-step /smcp/build ./build
 # copy backend files
 RUN mkdir ./backend
 RUN mkdir ./backend/cif/
+COPY backend/cif/test backend/cif/test 
 COPY backend/requirements.txt backend/.flaskenv  backend/api.py ./backend/
-COPY backend/ionrad.json backend/core.py backend/utils.py backend/zernike3d.py ./backend/
+COPY backend/ionrad.json backend/core.py backend/utils.py backend/zernike3d.py backend/make_basis.py ./backend/
 # copy ml core files
 RUN mkdir ./backend/ml
 COPY backend/ml/envs_r4_h0.005_f0.1+test backend/ml/envs_r4_h0.005_f0.1+test
@@ -29,7 +30,9 @@ RUN pip3 install -r ./backend/requirements.txt
 # train and serialize ml pipeline steps
 RUN python3 ./backend/ml/serialize_model.py
 # copy basis 
-COPY backend/basis backend/basis
+# COPY backend/basis backend/basis
+RUN python3 ./backend/make_basis.py
+
 ENV FLASK_ENV production
 
 EXPOSE 3000
