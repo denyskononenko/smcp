@@ -181,7 +181,7 @@ class SpinModel:
     
     @property
     def exchanges(self):
-        return [round(1e+3 * self.descr2hop(self.env2descr(env)), 2) for env in self.cu_envs]
+        return [abs(round(1e+3 * self.descr2hop(self.env2descr(env)), 2)) for env in self.cu_envs]
     
     @property
     def distances(self):
@@ -220,6 +220,10 @@ class SpinModel:
         print(f'# of Cu sites in the supercell: {len(self.cu_sites)}')
         print(f'# of pairs: {cu_pairs_count}')
         print(f'# of unique environemnts: {len(cu_envs)}')
+        
+        for _ in cu_envs:
+            print(f'R={_.cu_cu_dist}, comp: {_.chem_composition}')
+
         print(f'Couplings in the supercell:')
         for _ in cu_couplings:
             print(_)
