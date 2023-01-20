@@ -1,6 +1,12 @@
 # build react front end 
 FROM node:latest as build-step
 WORKDIR /smcp
+ENV https_proxy=http://www-cache.ifw-dresden.de:3128
+ENV http_proxy=http://www-cache.ifw-dresden.de:3128
+ENV HTTP_PROXY=http://www-cache.ifw-dresden.de:3128
+ENV HTTPS_PROXY=http://www-cache.ifw-dresden.de:3128
+ENV no_proxy="localhost,127.0.0.1"
+ENV NO_PROXY="localhost,127.0.0.1"
 ENV PATH /smcp/node_modules/.bin:$PATH
 COPY package.json ./
 COPY ./src ./src 
@@ -25,6 +31,7 @@ COPY backend/ml/envs_r4_h0.005_f0.1+test backend/ml/envs_r4_h0.005_f0.1+test
 COPY backend/ml/serialize_model.py backend/ml/dataset.py ./backend/ml/ 
 RUN mkdir ./backend/ml/model
 # install dependencies
+RUN pip3 config set global.proxy http://www-cache.ifw-dresden.de:3128
 RUN pip3 install -U pip
 RUN pip3 install -r ./backend/requirements.txt
 # train and serialize ml pipeline steps
@@ -37,4 +44,4 @@ ENV FLASK_ENV production
 
 EXPOSE 3000
 WORKDIR /smcp/backend
-CMD ["gunicorn", "--timeout", "200", "-b", ":3000", "api:app"]
+CMD ["gunicorn", "--timeout", "800", "-b", ":3000", "api:app"]
