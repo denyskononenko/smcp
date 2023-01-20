@@ -85,7 +85,7 @@ if __name__ == "__main__":
     # number of dataset items with low hopping 
     n_lowt = dataset_pd_lowt.shape[0]
     # select 25 % of dataset items with low hopping
-    indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), int(0.05 * n_lowt)).tolist()
+    indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), int(0.25 * n_lowt)).tolist()
     dataset_pd_lowt = dataset_pd_lowt.iloc[indices_to_select_lowt]
 
     dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     Y = dataset_pd_concat.to_numpy()[:,1].astype(float).reshape(-1,1)
     n, p = X.shape
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=RAND_ST)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=RAND_ST)
     
     # model serialization
     print("Model serialization")
