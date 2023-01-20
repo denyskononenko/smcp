@@ -1,0 +1,77 @@
+
+#(C) 2022 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+data_67151-ICSD
+_database_code_ICSD 67151
+_audit_creation_date 1990-12-27
+_chemical_name_common 'Dilithium copper oxide'
+_chemical_formula_structural 'Li2 Cu O2'
+_chemical_formula_sum 'Cu1 Li2 O2'
+_chemical_name_structure_type Li2PdO2
+_exptl_crystal_density_diffrn 3.78
+_diffrn_ambient_temperature 4.2
+_citation_title 'Neutronenbeugung an Li2 Cu O2'
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Zeitschrift fuer Anorganische und Allgemeine Chemie (1950) (DE)' 1989
+578 18 26 ZAACAB
+loop_
+_citation_author_citation_id
+_citation_author_name
+primary 'Hoffmann, R.'
+primary 'Hoppe, R.'
+primary 'Schaefer, W.'
+_cell_length_a 3.6322(5)
+_cell_length_b 2.8405(5)
+_cell_length_c 9.324(1)
+_cell_angle_alpha 90.
+_cell_angle_beta 90.
+_cell_angle_gamma 90.
+_cell_volume 96.2
+_cell_formula_units_Z 2
+_space_group_name_H-M_alt 'I m m m'
+_space_group_IT_number 71
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 'x, y, -z'
+2 'x, -y, z'
+3 '-x, y, z'
+4 '-x, -y, -z'
+5 '-x, -y, z'
+6 '-x, y, -z'
+7 'x, -y, -z'
+8 'x, y, z'
+9 'x+1/2, y+1/2, -z+1/2'
+10 'x+1/2, -y+1/2, z+1/2'
+11 '-x+1/2, y+1/2, z+1/2'
+12 '-x+1/2, -y+1/2, -z+1/2'
+13 '-x+1/2, -y+1/2, z+1/2'
+14 '-x+1/2, y+1/2, -z+1/2'
+15 'x+1/2, -y+1/2, -z+1/2'
+16 'x+1/2, y+1/2, z+1/2'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Cu2+ 2
+O2- -2
+Li1+ 1
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_occupancy
+Cu1 Cu2+ 2 a 0 0 0 0.0001 1.
+O1 O2- 4 j 0.5 0 0.6427(9) 0.0001 1.
+Li1 Li1+ 4 i 0 0 0.7187(27) 0.0001 1.
+#End of TTdata_67151-ICSD
