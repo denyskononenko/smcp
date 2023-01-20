@@ -31,6 +31,7 @@ const sliderMarks = [
     {value: 5, label: '5 Å'},
     {value: 6, label: '6 Å'},
     {value: 7, label: '7 Å'},
+    {value: 8, label: '8 Å'},
 ];
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -208,7 +209,7 @@ class Form extends Component {
                             getAriaValueText={this.valuetext}
                             step={0.5}
                             min={4}
-                            max={7}
+                            max={8}
                             valueLabelDisplay="auto"
                             marks={sliderMarks}/>
                         </Box>
