@@ -380,6 +380,23 @@ def validate_cif(cif_file: str) -> tuple:
         return (False, 'Can not parse the cif file')
     return (True, 'The cif file is valid')
 
+def get_chemical_formula(cif_file: str) -> str:
+    """Read chemical formula of the structure from the cif file."""
+    cif_parser = CifParser(cif_file)
+    cif_dict = cif_parser.as_dict()
+    formula = ''
+    try:
+        structure_dict = cif_dict[list(cif_dict.keys())[0]]
+        structure = Structure.from_file(cif_file)
+
+        if '_chemical_formula_structural' in structure_dict:
+            return structure_dict['_chemical_formula_structural']
+        else:
+            return structure.formula
+    except Exception:
+        return 'Can not parse chemical formula'
+
+
 if __name__ == "__main__":
     # cif_path = '/home/denys/Documents/ifw/smc/data/raw/531.cif'
     cif_path = '/home/denys/Documents/ifw/smc/data/raw/81457.cif'

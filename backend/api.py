@@ -2,7 +2,7 @@ import os
 import time
 from flask import Flask, request
 from pymatgen.core.structure import Structure  
-from core import load_ml, get_basis4prod, SpinModel, validate_cif
+from core import load_ml, get_basis4prod, SpinModel, validate_cif, get_chemical_formula
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
@@ -57,7 +57,7 @@ def get_spin_model_response(cif_file: str, maxR: float) -> dict:
     if check_status:
         structure = Structure.from_file(cif_file)
         spin_model = SpinModel(structure, basis, scaler_X, scaler_Y, feat_selector, model, maxR)
-        response["formula"] = structure.formula
+        response["formula"] = get_chemical_formula(cif_file)
         response["lattice"] = structure.lattice.matrix.tolist()
         response["exchanges"] = spin_model.exchanges
         response["distances"] = spin_model.distances
