@@ -1,24 +1,16 @@
 # build react front end 
 FROM node:latest as build-step
 WORKDIR /smcp
-ENV https_proxy=http://www-cache.ifw-dresden.de:3128
-ENV http_proxy=http://www-cache.ifw-dresden.de:3128
-ENV HTTP_PROXY=http://www-cache.ifw-dresden.de:3128
-ENV HTTPS_PROXY=http://www-cache.ifw-dresden.de:3128
-ENV no_proxy="localhost,127.0.0.1"
-ENV NO_PROXY="localhost,127.0.0.1"
 ENV PATH /smcp/node_modules/.bin:$PATH
 COPY package.json ./
 COPY ./src ./src 
 COPY ./public ./public
 RUN yarn install 
 RUN yarn build 
-
 # build flask backend
 FROM python:3.8
 WORKDIR /smcp
 COPY --from=build-step /smcp/build ./build
-
 # copy backend files
 RUN mkdir ./backend
 RUN mkdir ./backend/cif/
@@ -31,7 +23,6 @@ COPY backend/ml/envs_r4_h0.005_f0.1+test backend/ml/envs_r4_h0.005_f0.1+test
 COPY backend/ml/serialize_model.py backend/ml/dataset.py ./backend/ml/ 
 RUN mkdir ./backend/ml/model
 # install dependencies
-RUN pip3 config set global.proxy http://www-cache.ifw-dresden.de:3128
 RUN pip3 install -U pip
 RUN pip3 install -r ./backend/requirements.txt
 # train and serialize ml pipeline steps
