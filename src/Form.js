@@ -22,10 +22,12 @@ import { styled } from "@mui/material/styles";
 const testStructures = [
     {id: "haydeeite", name: "Cu3 Mg (OH)6 Cl2"},
     {id: "kapellasite", name: "Cu3 Zn (OH)6 Cl2"},
-    {id: "532", name: "Ca2 (Cu Br2 O2)"},
-    {id: "4154", name: "K2 Cu (N3 H3 C2 O2)2 (H2 O)4"},
-    {id: "80576", name: "Cu Sb2 O6"},
-    {id: "84173", name: "Sr3 Cu3 (P O4)4"},
+    {id: "linarite", name: "Pb Cu SO4 (OH)2"},
+    {id: "La2CuO4", name: "La2 Cu O4"},
+    {id: "SrCu2O3", name: "Sr Cu2 O3"},
+    {id: "CuSe2O5", name: "Cu Se2 O5"},
+    {id: "CuTe2O5", name: "Cu Te2 O5"},
+    {id: "Bi2CuO4", name: "Bi2 Cu O4"},
 ];
 
 const sliderMarks = [
