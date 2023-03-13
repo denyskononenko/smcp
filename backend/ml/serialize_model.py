@@ -82,10 +82,12 @@ if __name__ == "__main__":
     # split dataset into parts with low and large hoppings
     dataset_pd_higt = dataset_pd.loc[dataset_pd['hval'] >= 0.04]
     dataset_pd_lowt = dataset_pd.loc[dataset_pd['hval'] < 0.04]
+    # number of dataset items with high hopping 
+    n_higt = dataset_pd_higt.shape[0]
     # number of dataset items with low hopping 
     n_lowt = dataset_pd_lowt.shape[0]
     # select 25 % of dataset items with low hopping
-    indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), int(0.25 * n_lowt)).tolist()
+    indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), int(n_higt)).tolist()
     dataset_pd_lowt = dataset_pd_lowt.iloc[indices_to_select_lowt]
 
     dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
