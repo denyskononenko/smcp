@@ -1,0 +1,41 @@
+data_fplo
+_space_group_IT_number 11
+_symmetry_space_group_name_Hall '-P 2yb'
+_symmetry_space_group_name_H-M 'P 1 21/m 1'
+_cell_length_a  9.682
+_cell_length_b  5.646
+_cell_length_c  4.683
+_cell_angle_alpha                90.
+_cell_angle_beta                 102.65
+_cell_angle_gamma                90.
+loop_
+_symmetry_equiv_pos_site_id
+_symmetry_equiv_pos_as_xyz
+0 x,y,z
+1 -x,y+1/2,-z
+2 -x,-y,-z
+3 x,-y+1/2,z
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Cu2+ 2
+Pb2+ 2
+S6+ 6
+O2- -2
+H1+ 1
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Cu Cu2+ 0. 0. 0.
+Pb Pb2+ 0.3416 0.25 0.3292
+S S6+ 0.6692 0.25 0.1159
+O O2- 0.5256 0.25 0.9331
+O O2- 0.6635 0.25 0.4279
+O O2- 0.2535 0.5364 0.942
+O O2- 0.9666 0.25 0.713
+O O2- 0.0953 0.25 0.2698
+H H1+ 0.8667 0.25 0.6166
+H H1+ 0.0586 0.25 0.4537

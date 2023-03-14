@@ -5,6 +5,7 @@
 data_VESTA_phase_1
 
 _chemical_name_common                  'kapellasite'
+_chemical_formula_structural           'Cu3 Zn (OH)6 Cl2'
 _cell_length_a                         6.346770
 _cell_length_b                         6.346770
 _cell_length_c                         5.682320

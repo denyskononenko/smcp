@@ -5,6 +5,7 @@
 data_VESTA_phase_1
 
 _chemical_name_common                  'haydeeite'
+_chemical_formula_structural           'Cu3 Mg (OH)6 Cl2'
 _cell_length_a                         6.288530
 _cell_length_b                         6.288530
 _cell_length_c                         5.727110

@@ -20,10 +20,14 @@ import parse from 'html-react-parser';
 import { styled } from "@mui/material/styles";
 
 const testStructures = [
-    {id: "532", name: "Ca2 (Cu Br2 O2)"},
-    {id: "4154", name: "K2 Cu (N H C O N H C O N H)2 (H2 O)4"},
-    {id: "80576", name: "Cu Sb2 O6"},
-    {id: "84173", name: "Sr3 Cu3 (P O4)4"},
+    {id: "haydeeite", name: "Cu3 Mg (OH)6 Cl2"},
+    {id: "kapellasite", name: "Cu3 Zn (OH)6 Cl2"},
+    {id: "linarite", name: "Pb Cu SO4 (OH)2"},
+    {id: "La2CuO4", name: "La2 Cu O4"},
+    {id: "SrCu2O3", name: "Sr Cu2 O3"},
+    {id: "CuSe2O5", name: "Cu Se2 O5"},
+    {id: "CuTe2O5", name: "Cu Te2 O5"},
+    {id: "Bi2CuO4", name: "Bi2 Cu O4"},
 ];
 
 const sliderMarks = [
@@ -193,9 +197,11 @@ class Form extends Component {
                     <Grid item xs={12}>
                     <Item>
                         <Typography variant="body1" gutterBottom>
-                        This application estimates transfer integral aka hopping between Cu2+ sites in undoped cuprates. 
-                        Uploaded cif file should contain oxidation numbers of sites. 
-                        Select one of the structures from the database as illustrative example or upload .cif file of cuprate structure from your computer.
+                        This application estimates transfer integral between Cu2+ sites in undoped cuprates. 
+                        The uploaded structural .cif file should contain oxidation numbers of sites. 
+                        Select one of the structures from the illustrative data set as an example or upload a .cif file of the cuprate structure from the computer.
+                        The calculation of the transfer integrals can take a few minutes for complex structures with many Cu2+ atoms in the unit cell and a significant threshold for Cu..Cu distance.
+                        The approximate calculation of the transfer integral between two Cu2+ sites takes up to 3 s. 
                         </Typography>
                         <Typography variant="subtitle2" gutterBottom>
                         Maximum hopping distance
