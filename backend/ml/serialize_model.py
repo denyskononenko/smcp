@@ -88,9 +88,14 @@ if __name__ == "__main__":
     n_higt = dataset_pd_higt.shape[0]
     # number of dataset items with low hopping 
     n_lowt = dataset_pd_lowt.shape[0]
-    # select `n_higt` items with low hopping
+    # randomly select `n_higt` items with low hopping
     indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), n_higt).tolist()
     dataset_pd_lowt = dataset_pd_lowt.iloc[indices_to_select_lowt]
+    # convert to numpy array 
+    # X_higt = dataset_pd_higt.to_numpy()[:,3:].astype(float)
+    # Y_higt = dataset_pd_higt.to_numpy()[:,1].astype(float).reshape(-1,1)
+    # X_lowt = dataset_pd_lowt.to_numpy()[:,3:].astype(float)
+    # Y_lowt = dataset_pd_lowt.to_numpy()[:,1].astype(float).reshape(-1,1)
 
     dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
 
@@ -101,9 +106,9 @@ if __name__ == "__main__":
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=RAND_ST)
     
-    # model serialization
-    print("Model serialization")
-    save_gpr(X_train, Y_train, dir_for_serialized_models)
+    # train and serialize the GPR model alongside with the transformers
+    print("Model training and serialization")
+    save_gpr(X, Y, dir_for_serialized_models)
 
 
     
