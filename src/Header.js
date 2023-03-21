@@ -9,7 +9,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import AppLogo from './logo.svg';
 
 const linkPaper = "https://arxiv.org/";
-const linkCode = "https://github.com/denyskononenko/";
+const linkCode  = "https://github.com/denyskononenko/smcp";
 
 class Form extends Component {
     render(){
