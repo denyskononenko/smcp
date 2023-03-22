@@ -81,6 +81,7 @@ if __name__ == "__main__":
 
     # make the dataset 
     dataset_pd = Dataset(dataset_path).items
+    # data stratification
     # split dataset into parts with low and large hoppings
     dataset_pd_higt = dataset_pd.loc[dataset_pd['hval'] >= t_threshold]
     dataset_pd_lowt = dataset_pd.loc[dataset_pd['hval'] < t_threshold]
@@ -91,24 +92,32 @@ if __name__ == "__main__":
     # randomly select `n_higt` items with low hopping
     indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), n_higt).tolist()
     dataset_pd_lowt = dataset_pd_lowt.iloc[indices_to_select_lowt]
+    
     # convert to numpy array 
-    # X_higt = dataset_pd_higt.to_numpy()[:,3:].astype(float)
-    # Y_higt = dataset_pd_higt.to_numpy()[:,1].astype(float).reshape(-1,1)
-    # X_lowt = dataset_pd_lowt.to_numpy()[:,3:].astype(float)
-    # Y_lowt = dataset_pd_lowt.to_numpy()[:,1].astype(float).reshape(-1,1)
+    X_lowt = dataset_pd_lowt.to_numpy()[:,3:].astype(float)
+    Y_lowt = dataset_pd_lowt.to_numpy()[:,1].astype(float).reshape(-1,1)
+    X_higt = dataset_pd_higt.to_numpy()[:,3:].astype(float)
+    Y_higt = dataset_pd_higt.to_numpy()[:,1].astype(float).reshape(-1,1)
 
-    dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
+    # make random test-train split to reduce number of points for training of the model
+    X_lowt_train, X_lowt_test, Y_lowt_train, Y_lowt_test = train_test_split(X_lowt, Y_lowt, test_size=0.2, random_state=RAND_ST)
+    X_higt_train, X_higt_test, Y_higt_train, Y_higt_test = train_test_split(X_higt, Y_higt, test_size=0.2, random_state=RAND_ST)
 
-    # get numpy entities 
-    X = dataset_pd_concat.to_numpy()[:,3:].astype(float)
-    Y = dataset_pd_concat.to_numpy()[:,1].astype(float).reshape(-1,1)
-    n, p = X.shape
+    X_train = np.concatenate((X_lowt_train, X_higt_train), axis=0)
+    X_test  = np.concatenate((X_lowt_test, X_higt_test), axis=0)
+    Y_train = np.concatenate((Y_lowt_train, Y_higt_train), axis=0)
+    Y_test  = np.concatenate((Y_lowt_test, Y_higt_test), axis=0)
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=RAND_ST)
+    # dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
+    # # get numpy entities 
+    # X = dataset_pd_concat.to_numpy()[:,3:].astype(float)
+    # Y = dataset_pd_concat.to_numpy()[:,1].astype(float).reshape(-1,1)
+    # n, p = X.shape
+    # X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=RAND_ST)
     
     # train and serialize the GPR model alongside with the transformers
     print("Model training and serialization")
-    save_gpr(X, Y, dir_for_serialized_models)
+    save_gpr(X_train, Y_train, dir_for_serialized_models)
 
 
     
