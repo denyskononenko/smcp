@@ -74,8 +74,8 @@ class Form extends Component {
             testStructure: event.target.value,
             testStructureId: event.target.value
         });
-        console.log("TestStructure ", event.target);
-        console.log("TestStructure ", this.state.testStructure);
+        // console.log("TestStructure ", event.target);
+        // console.log("TestStructure ", this.state.testStructure);
     };
 
     handleTestStructureSubmit = () => {
@@ -85,7 +85,7 @@ class Form extends Component {
         data.append('id', this.state.testStructureId);
         data.append('maxR', this.state.maxR);
 
-        console.log(data);
+        // console.log(data);
 
         fetch('/process_test_cif', {
             method: 'POST',
@@ -103,8 +103,8 @@ class Form extends Component {
                 errorMessage: data.error,
                 loadingTestStructure: false
                 });
-                console.log("Submit is invoked");
-                console.log(this.state);
+                // console.log("Submit is invoked");
+                // console.log(this.state);
             });
 
     };
@@ -116,7 +116,7 @@ class Form extends Component {
             fileName: event.target.files[0].name
         });
         
-        console.log("file ", this.state);
+        // console.log("file ", this.state);
     };
 
     handleFileSubmit = () => {
@@ -150,7 +150,7 @@ class Form extends Component {
     };
 
     handleSliderChange = (event, newValue) => {
-        console.log('Slider change: ', newValue);
+        // console.log('Slider change: ', newValue);
         this.setState({
             maxR: newValue,
         });
@@ -199,7 +199,7 @@ class Form extends Component {
                         <Typography variant="body1" gutterBottom>
                         This application estimates leading transfer integrals in S=1/2 magnetic insulators with Cu{parse("<sup>2+<sup/>")} (undoped cuprates). 
                         You can select a structure from the dropdown list or upload a CIF-file of your own structure. 
-                        (The latter must contain information on the oxidation states of the atoms.) 
+                        (The latter must contain information on the oxidation states of the atoms). 
                         Note that a calculation can take up to a few minutes for involved structures and large cutoff distances (defined by the slider). 
                         As a rule of thumb, the calculation of one transfer integral takes about 3 seconds.
                         </Typography>
@@ -263,7 +263,7 @@ class Form extends Component {
                     <Grid item xs={6}>
                     <Item>
                         <Typography variant="subtitle1" gutterBottom>
-                        Upload my cif file
+                        Upload CIF-file
                         </Typography>
                         <Container>
                         <Stack spacing={2} direction="row" justifyContent="center">

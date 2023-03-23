@@ -56,8 +56,7 @@ class ThreeScene extends Component {
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(newSizes.width, newSizes.height);
 
-
-        console.log('Window resized: ', this.mount.clientWidth);
+        // console.log('Window resized: ', this.mount.clientWidth);
     };
 
     startAnimation = () => {
@@ -181,7 +180,7 @@ class ThreeScene extends Component {
         // create 3D objects for exchanges
         exchanges.forEach((edges, exchangeIndex) => {
             edges.forEach((edge) => {
-                console.log(vertices[edge[0]], vertices[edge[1]], ExchangeColors[exchangeIndex]);
+                // console.log(vertices[edge[0]], vertices[edge[1]], ExchangeColors[exchangeIndex]);
                 edges3DObj.push(this.makeBond(vertices[edge[0]], vertices[edge[1]], 0.1, ExchangeColors[exchangeIndex]));
             });
         });
@@ -218,9 +217,9 @@ class ThreeScene extends Component {
     };
 
     componentDidUpdate = (prevProps) => { 
-        console.log("Component did update");
-        console.log("Prev props: ", prevProps);
-        console.log("New props: ", this.props);
+        // console.log("Component did update");
+        // console.log("Prev props: ", prevProps);
+        // console.log("New props: ", this.props);
         // clear scene
         while(this.scene.children.length > 0){ 
             this.scene.remove(this.scene.children[0]); 
