@@ -74,8 +74,8 @@ class Form extends Component {
             testStructure: event.target.value,
             testStructureId: event.target.value
         });
-        console.log("TestStructure ", event.target);
-        console.log("TestStructure ", this.state.testStructure);
+        // console.log("TestStructure ", event.target);
+        // console.log("TestStructure ", this.state.testStructure);
     };
 
     handleTestStructureSubmit = () => {
@@ -85,7 +85,7 @@ class Form extends Component {
         data.append('id', this.state.testStructureId);
         data.append('maxR', this.state.maxR);
 
-        console.log(data);
+        // console.log(data);
 
         fetch('/process_test_cif', {
             method: 'POST',
@@ -103,8 +103,8 @@ class Form extends Component {
                 errorMessage: data.error,
                 loadingTestStructure: false
                 });
-                console.log("Submit is invoked");
-                console.log(this.state);
+                // console.log("Submit is invoked");
+                // console.log(this.state);
             });
 
     };
@@ -116,7 +116,7 @@ class Form extends Component {
             fileName: event.target.files[0].name
         });
         
-        console.log("file ", this.state);
+        // console.log("file ", this.state);
     };
 
     handleFileSubmit = () => {
@@ -144,17 +144,17 @@ class Form extends Component {
             errorMessage: data.error,
             loadingUserStructure: false
             });
-            console.log("Submit is invoked");
-            console.log(this.state);
+            // console.log("Submit is invoked");
+            // console.log(this.state);
         });
     };
 
     handleSliderChange = (event, newValue) => {
-        console.log('Slider change: ', newValue);
+        // console.log('Slider change: ', newValue);
         this.setState({
             maxR: newValue,
         });
-        console.log('Slider change state: ', this.state.maxR);
+        // console.log('Slider change state: ', this.state.maxR);
     };
 
     valuetext = (value) => {
@@ -197,14 +197,14 @@ class Form extends Component {
                     <Grid item xs={12}>
                     <Item>
                         <Typography variant="body1" gutterBottom>
-                        This application estimates transfer integral between Cu2+ sites in undoped cuprates. 
-                        The uploaded structural .cif file should contain oxidation numbers of sites. 
-                        Select one of the structures from the illustrative data set as an example or upload a .cif file of the cuprate structure from the computer.
-                        The calculation of the transfer integrals can take a few minutes for complex structures with many Cu2+ atoms in the unit cell and a significant threshold for Cu..Cu distance.
-                        The approximate calculation of the transfer integral between two Cu2+ sites takes up to 3 s. 
+                        This application estimates leading transfer integrals in S=1/2 magnetic insulators with Cu{parse("<sup>2+<sup/>")} (undoped cuprates). 
+                        You can select a structure from the dropdown list or upload a CIF-file of your own structure. 
+                        (The latter must contain information on the oxidation states of the atoms). 
+                        Note that a calculation can take up to a few minutes for involved structures and large cutoff distances (defined by the slider). 
+                        As a rule of thumb, the calculation of one transfer integral takes about 3 seconds.
                         </Typography>
                         <Typography variant="subtitle2" gutterBottom>
-                        Maximum hopping distance
+                        Maximum Cu-Cu distance
                         </Typography>
                         <Stack spacing={2} direction="row" justifyContent="center">
                         <Box sx={{ width: 300 }}>
@@ -263,7 +263,7 @@ class Form extends Component {
                     <Grid item xs={6}>
                     <Item>
                         <Typography variant="subtitle1" gutterBottom>
-                        Upload my cif file
+                        Upload CIF-file
                         </Typography>
                         <Container>
                         <Stack spacing={2} direction="row" justifyContent="center">
