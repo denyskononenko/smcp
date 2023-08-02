@@ -2,12 +2,16 @@ import os
 import time
 from flask import Flask, request
 from pymatgen.core.structure import Structure  
-from core import load_ml, get_basis4prod, SpinModel, validate_cif, get_chemical_formula
+from core import N_ESTIMATORS, dir_ensemble, get_basis4prod, SpinModel, validate_cif, get_chemical_formula
+from ensemble_ann import EnsembleANN
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
 # load basis and model 
-scaler_X, scaler_Y, feat_selector, model = load_ml()
+# scaler_X, scaler_Y, feat_selector, model = load_ml()
+model = EnsembleANN([], [], n_estimators=N_ESTIMATORS)
+model.load_estimators(dir_ensemble)
+
 basis = get_basis4prod()
 
 __file_dir__ = '/'.join(__file__.split('/')[:-1])
@@ -56,7 +60,7 @@ def get_spin_model_response(cif_file: str, maxR: float) -> dict:
     
     if check_status:
         structure = Structure.from_file(cif_file)
-        spin_model = SpinModel(structure, basis, scaler_X, scaler_Y, feat_selector, model, maxR)
+        spin_model = SpinModel(structure, basis, model, maxR)
         response["formula"] = get_chemical_formula(cif_file)
         response["lattice"] = structure.lattice.matrix.tolist()
         response["exchanges"] = spin_model.exchanges
