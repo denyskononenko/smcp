@@ -1,4 +1,6 @@
 import os
+import sys
+sys.path.append('..')
 import glob
 import numpy as np 
 import pandas as pd
@@ -17,8 +19,15 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from dataset import Dataset
 # metrics
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+# deep ensemble mode
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from sklearn.utils import resample
+from ensemble_ann import EnsembleANN
 
 RAND_ST = 26
+N_ESTIMATORS = 100
 __file_path__ = os.getcwd()
 
 def save_gpr(X, Y, path):
@@ -64,16 +73,22 @@ def save_gpr(X, Y, path):
     # export model 
     pickle.dump(model, open(f'{path}/model.sav', 'wb'))
 
+def save_ensemble_ann(X, Y, path):
+    """Save Ensemble ANN"""
+    ensemble_ann = EnsembleANN(X, Y, n_estimators=N_ESTIMATORS)
+    ensemble_ann.train_ensamble()
+    ensemble_ann.save_estimators(path)
+
 if __name__ == "__main__":
-    t_threshold = 0.04 # transfer integral threshold in eV
+    #t_threshold = 0.04 # transfer integral threshold in eV
     
     __file_dir__ = '/'.join(__file__.split('/')[:-1])
 
-    dataset_path = f'{__file_dir__}/envs_r4_h0.005_f0.1+test/'
+    dataset_path = f'{__file_dir__}/envs_r4_f0.1_Hopt/'
     print(dataset_path, os.path.isdir(dataset_path))
 
     # path for serialization of the model
-    dir_for_serialized_models = f"{__file_dir__}/model/"
+    dir_for_serialized_models = f"{__file_dir__}/model/ensemble_ann/"
 
     # check if directory for model serialization exists 
     if not os.path.isdir(dir_for_serialized_models): 
@@ -81,44 +96,47 @@ if __name__ == "__main__":
 
     # make the dataset 
     dataset_pd = Dataset(dataset_path).items
+    X_total = dataset_pd.to_numpy()[:,3:].astype(float)
+    Y_total = dataset_pd.to_numpy()[:,1].astype(float).reshape(-1,1)
+
     # data stratification
     # split dataset into parts with low and large hoppings
-    dataset_pd_higt = dataset_pd.loc[dataset_pd['hval'] >= t_threshold]
-    dataset_pd_lowt = dataset_pd.loc[dataset_pd['hval'] < t_threshold]
-    # number of dataset items with high hopping 
-    n_higt = dataset_pd_higt.shape[0]
-    # number of dataset items with low hopping 
-    n_lowt = dataset_pd_lowt.shape[0]
-    # randomly select `n_higt` items with low hopping
-    indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), n_higt).tolist()
-    dataset_pd_lowt = dataset_pd_lowt.iloc[indices_to_select_lowt]
+    # dataset_pd_higt = dataset_pd.loc[dataset_pd['hval'] >= t_threshold]
+    # dataset_pd_lowt = dataset_pd.loc[dataset_pd['hval'] < t_threshold]
+    # # number of dataset items with high hopping 
+    # n_higt = dataset_pd_higt.shape[0]
+    # # number of dataset items with low hopping 
+    # n_lowt = dataset_pd_lowt.shape[0]
+    # # randomly select `n_higt` items with low hopping
+    # indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), n_higt).tolist()
+    # dataset_pd_lowt = dataset_pd_lowt.iloc[indices_to_select_lowt]
     
-    # convert to numpy array 
-    X_lowt = dataset_pd_lowt.to_numpy()[:,3:].astype(float)
-    Y_lowt = dataset_pd_lowt.to_numpy()[:,1].astype(float).reshape(-1,1)
-    X_higt = dataset_pd_higt.to_numpy()[:,3:].astype(float)
-    Y_higt = dataset_pd_higt.to_numpy()[:,1].astype(float).reshape(-1,1)
+    # # convert to numpy array 
+    # X_lowt = dataset_pd_lowt.to_numpy()[:,3:].astype(float)
+    # Y_lowt = dataset_pd_lowt.to_numpy()[:,1].astype(float).reshape(-1,1)
+    # X_higt = dataset_pd_higt.to_numpy()[:,3:].astype(float)
+    # Y_higt = dataset_pd_higt.to_numpy()[:,1].astype(float).reshape(-1,1)
 
-    # make random test-train split to reduce number of points for training of the model
-    X_lowt_train, X_lowt_test, Y_lowt_train, Y_lowt_test = train_test_split(X_lowt, Y_lowt, test_size=0.2, random_state=RAND_ST)
-    X_higt_train, X_higt_test, Y_higt_train, Y_higt_test = train_test_split(X_higt, Y_higt, test_size=0.2, random_state=RAND_ST)
+    # # make random test-train split to reduce number of points for training of the model
+    # X_lowt_train, X_lowt_test, Y_lowt_train, Y_lowt_test = train_test_split(X_lowt, Y_lowt, test_size=0.2, random_state=RAND_ST)
+    # X_higt_train, X_higt_test, Y_higt_train, Y_higt_test = train_test_split(X_higt, Y_higt, test_size=0.2, random_state=RAND_ST)
 
-    X_train = np.concatenate((X_lowt_train, X_higt_train), axis=0)
-    X_test  = np.concatenate((X_lowt_test, X_higt_test), axis=0)
-    Y_train = np.concatenate((Y_lowt_train, Y_higt_train), axis=0)
-    Y_test  = np.concatenate((Y_lowt_test, Y_higt_test), axis=0)
+    # X_train = np.concatenate((X_lowt_train, X_higt_train), axis=0)
+    # X_test  = np.concatenate((X_lowt_test, X_higt_test), axis=0)
+    # Y_train = np.concatenate((Y_lowt_train, Y_higt_train), axis=0)
+    # Y_test  = np.concatenate((Y_lowt_test, Y_higt_test), axis=0)
 
-    # dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
-    # # get numpy entities 
+    # # dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
+    # # # get numpy entities 
     # X = dataset_pd_concat.to_numpy()[:,3:].astype(float)
     # Y = dataset_pd_concat.to_numpy()[:,1].astype(float).reshape(-1,1)
     # n, p = X.shape
     # X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=RAND_ST)
     
-    # train and serialize the GPR model alongside with the transformers
+    # train and serialize the ML model 
     print("Model training and serialization")
-    save_gpr(X_train, Y_train, dir_for_serialized_models)
-
+    #save_gpr(X_train, Y_train, dir_for_serialized_models)
+    save_ensemble_ann(X_total, Y_total, dir_for_serialized_models)
 
     
     

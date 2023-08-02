@@ -5,22 +5,32 @@ import pickle
 import numpy as np 
 from numpy.linalg import norm
 
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from sklearn.utils import resample
+
 from pymatgen.core.sites import PeriodicSite
 from pymatgen.core.structure import Structure
 from pymatgen.io.cif import CifParser
 from utils import timeit, calc_basis_size, load_basis, make_3d_img, zernike3d_descriptor, zernike3d_descriptor_invariant
+from ensemble_ann import EnsembleANN
 
 _N_MAX_ = 25
+N_ESTIMATORS = 100
 # path
 dirname = os.path.dirname(__file__)
 ionrad_file = os.path.join(dirname, 'ionrad.json')
 basis_path = os.path.join(dirname, 'basis/')
 
+# ANN Ensemble model
+dir_ensemble = os.path.join(dirname, 'ml/model/ensemble_ann/')
+
 # ML Model
-file_scalerX = os.path.join(dirname, 'ml/model/scalerX.sav')
-file_scalerY = os.path.join(dirname, 'ml/model/scalerY.sav')
-file_feat_selector = os.path.join(dirname, 'ml/model/feat_selector.sav')
-file_model = os.path.join(dirname, 'ml/model/model.sav')
+# file_scalerX = os.path.join(dirname, 'ml/model/scalerX.sav')
+# file_scalerY = os.path.join(dirname, 'ml/model/scalerY.sav')
+# file_feat_selector = os.path.join(dirname, 'ml/model/feat_selector.sav')
+# file_model = os.path.join(dirname, 'ml/model/model.sav')
 
 # bohr radii to angstroms conversion coefficient 
 B2A = 0.5291
@@ -132,9 +142,9 @@ class SpinModel:
     def __init__(self, 
                     structure: Structure, 
                     basis, 
-                    scaler_X, 
-                    scaler_Y, 
-                    feat_selector, 
+                    #scaler_X, 
+                    #scaler_Y, 
+                    #feat_selector, 
                     model,
                     r_cu_cu_max: float = 6.0, 
                     scaling: list = [2, 2, 2],
@@ -142,9 +152,9 @@ class SpinModel:
                     ):
         self.structure = structure
         self.basis  = basis 
-        self.scaler_X =  scaler_X
-        self.scaler_Y = scaler_Y
-        self.feat_selector = feat_selector
+        #self.scaler_X =  scaler_X
+        #self.scaler_Y = scaler_Y
+        #self.feat_selector = feat_selector
         self.model = model
         self.r_cu_cu_max = r_cu_cu_max
         self.scaling = scaling         # scaling coefficients to build the super cell
@@ -258,13 +268,15 @@ class SpinModel:
     def descr2hop(self, descr: list):
         """Predict the hopping for the given descriptor of the local crystal environment."""
         # min max scale the feature vector 
-        X = self.scaler_X.transform(descr)
-        # select important features 
-        X_new = self.feat_selector.transform(X)
-        # predict the hopping, value is scaled from 0 to 1
-        Y_pred = self.model.predict(X_new) 
-        # inverse transform the predicted value 
-        Y_pred = self.scaler_Y.inverse_transform(Y_pred.reshape(-1, 1))
+        # X = self.scaler_X.transform(descr)
+        # # select important features 
+        # X_new = self.feat_selector.transform(X)
+        # # predict the hopping, value is scaled from 0 to 1
+        # Y_pred = self.model.predict(X_new) 
+        # # inverse transform the predicted value 
+        # Y_pred = self.scaler_Y.inverse_transform(Y_pred.reshape(-1, 1))
+        Y_pred = self.model.predict(descr).mean(axis=1) # average the ensemble 
+        print('Y pred = ', Y_pred)
         return Y_pred.flatten()[0]
 
 @timeit
@@ -327,15 +339,15 @@ def env2descr(env: CrystalEnvironment, basis: list) -> list:
     print(f'Predictors: {len(X)}')
     return X
 
-def load_ml():
+#def load_ml():
     """
     Load ML pipeline which involves MinMax scaling, feature selection and 
     """
-    scaler_X = pickle.load(open(file_scalerX, 'rb'))
-    scaler_Y = pickle.load(open(file_scalerY, 'rb'))
-    feat_selector = pickle.load(open(file_feat_selector, 'rb'))
-    loaded_model = pickle.load(open(file_model, 'rb'))
-    return scaler_X, scaler_Y, feat_selector, loaded_model
+    # scaler_X = pickle.load(open(file_scalerX, 'rb'))
+    # scaler_Y = pickle.load(open(file_scalerY, 'rb'))
+    # feat_selector = pickle.load(open(file_feat_selector, 'rb'))
+    # loaded_model = pickle.load(open(file_model, 'rb'))
+    # return scaler_X, scaler_Y, feat_selector, loaded_model
 
 def descr2hop(descr: list) -> float:
     """ 
@@ -345,16 +357,19 @@ def descr2hop(descr: list) -> float:
     Return:
         (float) real value of the hopping.
     """
-    scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
+    #scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
     # min max scale the feature vector 
-    X = scaler_X.transform(descr)
+    #X = scaler_X.transform(descr)
     
     # select important features 
-    X_new = feat_selector.transform(X)
+    #X_new = feat_selector.transform(X)
     # predict the hopping, value is scaled from 0 to 1
-    Y_pred = loaded_model.predict(X_new) 
+    #Y_pred = loaded_model.predict(X_new) 
     # inverse transform the predicted value 
-    Y_pred = scaler_Y.inverse_transform(Y_pred.reshape(-1, 1))
+    #Y_pred = scaler_Y.inverse_transform(Y_pred.reshape(-1, 1))
+    ensemble_ann = EnsembleANN([], [], n_estimators=N_ESTIMATORS)
+    ensemble_ann.load_estimators(dir_ensemble)
+    Y_pred = ensemble_ann.predict(descr)
     return Y_pred
 
 def get_basis4prod():
@@ -398,25 +413,29 @@ def get_chemical_formula(cif_file: str) -> str:
 
 
 if __name__ == "__main__":
-    # cif_path = '/home/denys/Documents/ifw/smc/data/raw/531.cif'
-    cif_path = '/home/denys/Documents/ifw/smc/data/raw/81457.cif'
-    corrupt_cif = '/home/denys/Documents/ifw/smc/data/test_app/invalid-corrupt.cif'
-    nooxi_cif = '/home/denys/Documents/ifw/smc/data/test_app/invalid-no-oxi.cif'
+    cif_path = '/Users/denyskononenko/Documents/ifw/smc/data/raw/531.cif'
+    #cif_path = '/home/denys/Documents/ifw/smc/data/raw/81457.cif'
+    #corrupt_cif = '/home/denys/Documents/ifw/smc/data/test_app/invalid-corrupt.cif'
+    #nooxi_cif = '/home/denys/Documents/ifw/smc/data/test_app/invalid-no-oxi.cif'
 
-    print(validate_cif(cif_path))
-    print(validate_cif(corrupt_cif))
-    print(validate_cif(nooxi_cif))
+    #print(validate_cif(cif_path))
+    #print(validate_cif(corrupt_cif))
+    #print(validate_cif(nooxi_cif))
 
-    #struct = Structure.from_file(cif_path)
+    struct = Structure.from_file(cif_path)
     #scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
-    #basis = get_basis4prod()
+    ensemble_ann = EnsembleANN([], [], n_estimators=N_ESTIMATORS)
+    print('Loading the model.')
+    ensemble_ann.load_estimators(dir_ensemble)
 
-    #test_spin_model = SpinModel(struct, basis, scaler_X, scaler_Y, feat_selector, loaded_model)
+    basis = get_basis4prod()
 
-    #print(test_spin_model.distances)
-    #print(test_spin_model.exchanges)
-    #print(test_spin_model.edges)
-    #print(test_spin_model.edges)
+    test_spin_model = SpinModel(struct, basis, ensemble_ann)
+
+    print(test_spin_model.distances)
+    print(test_spin_model.exchanges)
+    print(test_spin_model.edges)
+    print(test_spin_model.edges)
 
     #envs = struct2env(struct, 6.0)
     #test_env = envs[0]
