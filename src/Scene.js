@@ -27,8 +27,8 @@ class ThreeScene extends Component {
         const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         // configure controls constrains for maximal zoom in/out in angstroms
-        controls.maxDistance = 50;
-        controls.minDistance = 20;
+        controls.maxDistance = 90;
+        controls.minDistance = 5;
 
         // add objects to the scene 
         this.scene.add(this.light);
