@@ -65,7 +65,7 @@ class CrystalEnvironment:
     
     @property 
     def centroid(self):
-        return (self.cu2.coords - self.cu1.coords) / 2
+        return (self.cu2.coords + self.cu1.coords) / 2
     
     @property
     def cu_cu_dist(self):
@@ -94,11 +94,10 @@ class CrystalEnvironment:
         # radius of the sphere with the center in centroid 
         r_sph = max(self.r_env, self.cu_cu_dist / 2 + 0.2)
         # atoms in environment = atoms in central sphere + atoms from nearest environment of the copper
-        atoms_in_env = self.structure.get_sites_in_sphere(self.centroid, r_sph) +\
-                       self.structure.get_sites_in_sphere(self.cu1.coords, self.r_cu) +\
-                       self.structure.get_sites_in_sphere(self.cu2.coords, self.r_cu)
+        atoms_in_env = self.structure.get_sites_in_sphere(self.cu1.coords, self.r_cu) +\
+                       self.structure.get_sites_in_sphere(self.cu2.coords, self.r_cu) +\
+                       self.structure.get_sites_in_sphere(self.centroid, r_sph)
         
-
         cu_cu_env = [[
                         *((site.coords - self.centroid) / self.r_norm), # normalized x y z with substracted zero 
                         self.cryst_ion_rad[str(get_site_Z(site))][str(get_site_OxN(site))] / self.r_norm, # ionic radius
