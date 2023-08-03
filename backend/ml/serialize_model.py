@@ -99,6 +99,8 @@ if __name__ == "__main__":
     X_total = dataset_pd.to_numpy()[:,3:].astype(float)
     Y_total = dataset_pd.to_numpy()[:,1].astype(float).reshape(-1,1)
 
+    print(f'X shape: {X_total.shape}, Y shape: {Y_total.shape}')
+
     # data stratification
     # split dataset into parts with low and large hoppings
     # dataset_pd_higt = dataset_pd.loc[dataset_pd['hval'] >= t_threshold]
