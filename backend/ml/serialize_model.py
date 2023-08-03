@@ -80,8 +80,6 @@ def save_ensemble_ann(X, Y, path):
     ensemble_ann.save_estimators(path)
 
 if __name__ == "__main__":
-    #t_threshold = 0.04 # transfer integral threshold in eV
-    
     __file_dir__ = '/'.join(__file__.split('/')[:-1])
 
     dataset_path = f'{__file_dir__}/envs_r4_f0.1_Hopt/'
@@ -101,40 +99,6 @@ if __name__ == "__main__":
 
     print(f'X shape: {X_total.shape}, Y shape: {Y_total.shape}')
 
-    # data stratification
-    # split dataset into parts with low and large hoppings
-    # dataset_pd_higt = dataset_pd.loc[dataset_pd['hval'] >= t_threshold]
-    # dataset_pd_lowt = dataset_pd.loc[dataset_pd['hval'] < t_threshold]
-    # # number of dataset items with high hopping 
-    # n_higt = dataset_pd_higt.shape[0]
-    # # number of dataset items with low hopping 
-    # n_lowt = dataset_pd_lowt.shape[0]
-    # # randomly select `n_higt` items with low hopping
-    # indices_to_select_lowt = np.random.choice(np.arange(n_lowt, dtype=int), n_higt).tolist()
-    # dataset_pd_lowt = dataset_pd_lowt.iloc[indices_to_select_lowt]
-    
-    # # convert to numpy array 
-    # X_lowt = dataset_pd_lowt.to_numpy()[:,3:].astype(float)
-    # Y_lowt = dataset_pd_lowt.to_numpy()[:,1].astype(float).reshape(-1,1)
-    # X_higt = dataset_pd_higt.to_numpy()[:,3:].astype(float)
-    # Y_higt = dataset_pd_higt.to_numpy()[:,1].astype(float).reshape(-1,1)
-
-    # # make random test-train split to reduce number of points for training of the model
-    # X_lowt_train, X_lowt_test, Y_lowt_train, Y_lowt_test = train_test_split(X_lowt, Y_lowt, test_size=0.2, random_state=RAND_ST)
-    # X_higt_train, X_higt_test, Y_higt_train, Y_higt_test = train_test_split(X_higt, Y_higt, test_size=0.2, random_state=RAND_ST)
-
-    # X_train = np.concatenate((X_lowt_train, X_higt_train), axis=0)
-    # X_test  = np.concatenate((X_lowt_test, X_higt_test), axis=0)
-    # Y_train = np.concatenate((Y_lowt_train, Y_higt_train), axis=0)
-    # Y_test  = np.concatenate((Y_lowt_test, Y_higt_test), axis=0)
-
-    # # dataset_pd_concat = pd.concat([dataset_pd_lowt, dataset_pd_higt])
-    # # # get numpy entities 
-    # X = dataset_pd_concat.to_numpy()[:,3:].astype(float)
-    # Y = dataset_pd_concat.to_numpy()[:,1].astype(float).reshape(-1,1)
-    # n, p = X.shape
-    # X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=RAND_ST)
-    
     # train and serialize the ML model 
     print("Model training and serialization")
     #save_gpr(X_train, Y_train, dir_for_serialized_models)

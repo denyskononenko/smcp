@@ -140,10 +140,7 @@ class CrystalEnvironment:
 class SpinModel:
     def __init__(self, 
                     structure: Structure, 
-                    basis, 
-                    #scaler_X, 
-                    #scaler_Y, 
-                    #feat_selector, 
+                    basis,
                     model,
                     r_cu_cu_max: float = 6.0, 
                     scaling: list = [2, 2, 2],
@@ -151,9 +148,6 @@ class SpinModel:
                     ):
         self.structure = structure
         self.basis  = basis 
-        #self.scaler_X =  scaler_X
-        #self.scaler_Y = scaler_Y
-        #self.feat_selector = feat_selector
         self.model = model
         self.r_cu_cu_max = r_cu_cu_max
         self.scaling = scaling         # scaling coefficients to build the super cell
@@ -266,14 +260,6 @@ class SpinModel:
     
     def descr2hop(self, descr: list):
         """Predict the hopping for the given descriptor of the local crystal environment."""
-        # min max scale the feature vector 
-        # X = self.scaler_X.transform(descr)
-        # # select important features 
-        # X_new = self.feat_selector.transform(X)
-        # # predict the hopping, value is scaled from 0 to 1
-        # Y_pred = self.model.predict(X_new) 
-        # # inverse transform the predicted value 
-        # Y_pred = self.scaler_Y.inverse_transform(Y_pred.reshape(-1, 1))
         Y_pred = self.model.predict(descr).mean(axis=1) # average the ensemble 
         print('Y pred = ', Y_pred)
         return Y_pred.flatten()[0]
@@ -337,16 +323,6 @@ def env2descr(env: CrystalEnvironment, basis: list) -> list:
     X = np.array([[dist] + [_[2] for _ in descr]])
     print(f'Predictors: {len(X)}')
     return X
-
-#def load_ml():
-    """
-    Load ML pipeline which involves MinMax scaling, feature selection and 
-    """
-    # scaler_X = pickle.load(open(file_scalerX, 'rb'))
-    # scaler_Y = pickle.load(open(file_scalerY, 'rb'))
-    # feat_selector = pickle.load(open(file_feat_selector, 'rb'))
-    # loaded_model = pickle.load(open(file_model, 'rb'))
-    # return scaler_X, scaler_Y, feat_selector, loaded_model
 
 def descr2hop(descr: list) -> float:
     """ 
@@ -421,20 +397,20 @@ if __name__ == "__main__":
     #print(validate_cif(corrupt_cif))
     #print(validate_cif(nooxi_cif))
 
-    struct = Structure.from_file(cif_path)
-    #scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
-    ensemble_ann = EnsembleANN([], [], n_estimators=N_ESTIMATORS)
-    print('Loading the model.')
-    ensemble_ann.load_estimators(dir_ensemble)
+    # struct = Structure.from_file(cif_path)
+    # #scaler_X, scaler_Y, feat_selector, loaded_model = load_ml()
+    # ensemble_ann = EnsembleANN([], [], n_estimators=N_ESTIMATORS)
+    # print('Loading the model.')
+    # ensemble_ann.load_estimators(dir_ensemble)
 
-    basis = get_basis4prod()
+    # basis = get_basis4prod()
 
-    test_spin_model = SpinModel(struct, basis, ensemble_ann)
+    # test_spin_model = SpinModel(struct, basis, ensemble_ann)
 
-    print(test_spin_model.distances)
-    print(test_spin_model.exchanges)
-    print(test_spin_model.edges)
-    print(test_spin_model.edges)
+    # print(test_spin_model.distances)
+    # print(test_spin_model.exchanges)
+    # print(test_spin_model.edges)
+    # print(test_spin_model.edges)
 
     #envs = struct2env(struct, 6.0)
     #test_env = envs[0]

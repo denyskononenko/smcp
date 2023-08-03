@@ -8,7 +8,6 @@ from ensemble_ann import EnsembleANN
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
 # load basis and model 
-# scaler_X, scaler_Y, feat_selector, model = load_ml()
 model = EnsembleANN([], [], n_estimators=N_ESTIMATORS)
 model.load_estimators(dir_ensemble)
 
