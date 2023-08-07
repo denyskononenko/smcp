@@ -4,13 +4,16 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from sklearn.utils import resample
 
+N_ESTIMATORS = 100
 KFOLDS = 6
 DROPOUT_RATE = 0.05
 LEARN_RATE = 0.001
 NUM_FEATURES = 183
+EPOCHS = 2000
+BATCH_SIZE = 256
 
 class EnsembleANN:
-    def __init__(self, X, Y, n_estimators=100):
+    def __init__(self, X, Y, n_estimators=N_ESTIMATORS):
         self.n_estimators = n_estimators
         self.X = X
         self.Y = Y
@@ -33,7 +36,7 @@ class EnsembleANN:
         x = EnsembleANN.apply_bn_and_dropout(x)
         x = layers.Dense(16, activation='relu')(x)
         x = EnsembleANN.apply_bn_and_dropout(x)
-        out = layers.Dense(1, name="affinity")(x)
+        out = layers.Dense(1, name="t")(x)
         ann = keras.Model(input, out, name="t_predictor")
         ann.summary()
         return ann
@@ -49,9 +52,9 @@ class EnsembleANN:
                 loss=keras.losses.MeanSquaredError())
             t_hist = t_ann.fit(
                 X_train, 
-                Y_train, 
-                epochs=2000, 
-                batch_size=256,
+                Y_train,
+                epochs=EPOCHS,
+                batch_size=BATCH_SIZE,
                 verbose=0
             ) 
             
