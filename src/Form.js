@@ -28,6 +28,13 @@ const testStructures = [
     {id: "CuSe2O5", name: "Cu Se2 O5"},
     {id: "CuTe2O5", name: "Cu Te2 O5"},
     {id: "Bi2CuO4", name: "Bi2 Cu O4"},
+    {id: "Bi2Sr2CuO6", name: "Bi2 Sr2 Cu O6"},
+    {id: "HgBa2CuO4", name: "Hg Ba2 Cu O4"},
+    {id: "HgBa2CaCu2O6", name: "Hg Ba2 Ca Cu2 O6"},
+    {id: "HgBa2Ca2Cu3O8", name: "Hg Ba2 Ca2 Cu3 O8"},
+    {id: "Tl2Ba2CuO6", name: "Tl2 Ba2 Cu O6"},
+    {id: "Tl2Ba2CaCu2O8", name: "Tl2 Ba2 Ca Cu2 O8"},
+    {id: "Tl2Ba2Ca2Cu3O10", name: "Tl2 Ba2 Ca2 Cu3 O10"},
 ];
 
 const sliderMarks = [
