@@ -16,10 +16,11 @@ RUN mkdir ./backend
 RUN mkdir ./backend/cif/
 COPY backend/cif/test backend/cif/test 
 COPY backend/requirements.txt backend/.flaskenv  backend/api.py ./backend/
-COPY backend/ionrad.json backend/core.py backend/utils.py backend/zernike3d.py backend/make_basis.py ./backend/
+COPY backend/ionrad.json backend/ensemble_ann.py backend/core.py backend/utils.py backend/zernike3d.py backend/make_basis.py ./backend/
 # copy ml core files
 RUN mkdir ./backend/ml
 COPY backend/ml/envs_r4_f0.1_Hopt backend/ml/envs_r4_f0.1_Hopt
+COPY backend/ensemble_ann.py ./backend/ml/
 COPY backend/ml/serialize_model.py backend/ml/dataset.py ./backend/ml/ 
 RUN mkdir ./backend/ml/model
 # install dependencies
