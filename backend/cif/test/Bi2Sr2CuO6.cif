@@ -1,0 +1,99 @@
+
+#(C) 2023 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+data_67426-ICSD
+_database_code_ICSD 67426
+_audit_creation_date 1991-07-10
+_chemical_name_common 'Dibismuth distrontium copper hexaoxide'
+_chemical_formula_structural 'Bi2 Sr2 Cu O6'
+_chemical_formula_sum 'Bi2 Cu1 O6 Sr2'
+_exptl_crystal_density_diffrn 7.05
+_citation_title
+'Structures of the superconducting oxides Tl2Ba2CuO6 and Bi2Sr2CuO6'
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Physical Review B: Condensed Matter and Materials Physics' 1988 38 225
+231 PRBMDO
+loop_
+_citation_author_citation_id
+_citation_author_name
+primary 'Torardi, C.C.'
+primary 'Subramanian, M.A.'
+primary 'Calabrese, J.C.'
+primary 'Gopalakrishnan, J.'
+primary 'McCarron, E.M.'
+primary 'Morrissey, K.J.'
+primary 'Askew, T.R.'
+primary 'Flippen, R.B.'
+primary 'Chowdry, U.'
+primary 'Sleight, A.W.'
+_cell_length_a 5.362(3)
+_cell_length_b 5.374(1)
+_cell_length_c 24.622(6)
+_cell_angle_alpha 90.
+_cell_angle_beta 90.
+_cell_angle_gamma 90.
+_cell_volume 709.49
+_cell_formula_units_Z 4
+_space_group_name_H-M_alt 'A m a a'
+_space_group_IT_number 66
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 'x+1/2, y, -z'
+2 'x+1/2, -y, z'
+3 '-x, y, z'
+4 '-x, -y, -z'
+5 '-x+1/2, -y, z'
+6 '-x+1/2, y, -z'
+7 'x, -y, -z'
+8 'x, y, z'
+9 'x+1/2, y+1/2, -z+1/2'
+10 'x+1/2, -y+1/2, z+1/2'
+11 '-x, y+1/2, z+1/2'
+12 '-x, -y+1/2, -z+1/2'
+13 '-x+1/2, -y+1/2, z+1/2'
+14 '-x+1/2, y+1/2, -z+1/2'
+15 'x, -y+1/2, -z+1/2'
+16 'x, y+1/2, z+1/2'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Bi3+ 3
+Sr2+ 2
+Cu2+ 2
+O2- -2
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+Bi1 Bi3+ 8 l 0 0.2758(5) 0.0660(2) . 1.
+Sr1 Sr2+ 8 l 0.5 0.2479(9) 0.1790(4) . 1.
+Cu1 Cu2+ 4 e 0.5 0.75 0.25 . 1.
+O1 O2- 8 h 0.75 0.5 0.246(2) 0.5(6) 1.
+O2 O2- 8 l 0 0.226(12) 0.145(4) 8.60(26) 1.
+O3 O2- 8 l 0.5 0.334(15) 0.064(5) 9.30(25) 1.
+loop_
+_atom_site_aniso_label
+_atom_site_aniso_type_symbol
+_atom_site_aniso_B_11
+_atom_site_aniso_B_22
+_atom_site_aniso_B_33
+_atom_site_aniso_B_12
+_atom_site_aniso_B_13
+_atom_site_aniso_B_23
+Bi1 Bi3+ 10.1(3) 1.5(1) 6.1(3) 0.4(1) -5.1(1) -.5(1)
+Sr1 Sr2+ 0.7(2) 0.5(2) 7.2(6) 0 0 -.2(3)
+Cu1 Cu2+ 1.7(5) 0.3(4) 11.00(15) 0 0 0.1(5)
+#End of TTdata_67426-ICSD
