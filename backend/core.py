@@ -44,7 +44,7 @@ def get_site_Z(site: PeriodicSite) -> int:
 
 def get_site_OxN(site: PeriodicSite) -> int:
     """Auxilary function to select oxidation state of the PeriodicNeighbor."""
-    return int(site.as_dict()['species'][0]['oxidation_state'])
+    return int(site.specie.oxi_state)
 
 class CrystalEnvironment:
     def __init__(self, 
