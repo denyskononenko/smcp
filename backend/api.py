@@ -2,8 +2,8 @@ import os
 import time
 from flask import Flask, request
 from pymatgen.core.structure import Structure  
-from core import N_ESTIMATORS, dir_ensemble, get_basis4prod, SpinModel, validate_cif, get_chemical_formula
-from ensemble_ann import EnsembleANN
+from core import dir_ensemble, get_basis4prod, SpinModel, validate_cif, get_chemical_formula
+from ensemble_ann import EnsembleANN, N_ESTIMATORS
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 

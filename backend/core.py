@@ -14,10 +14,10 @@ from pymatgen.core.sites import PeriodicSite
 from pymatgen.core.structure import Structure
 from pymatgen.io.cif import CifParser
 from utils import timeit, calc_basis_size, load_basis, make_3d_img, zernike3d_descriptor, zernike3d_descriptor_invariant
-from ensemble_ann import EnsembleANN
+from ensemble_ann import EnsembleANN, N_ESTIMATORS
 
+# truncation to the basis to use
 _N_MAX_ = 25
-N_ESTIMATORS = 100
 # path
 dirname = os.path.dirname(__file__)
 ionrad_file = os.path.join(dirname, 'ionrad.json')

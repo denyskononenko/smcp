@@ -4,8 +4,11 @@ import numpy as np
 from zernike3d import Zernike3D
 from utils import timeit
 
+# truncation of the generated basis
+_N_MAX_ = 25
+
 @timeit
-def save_basis(path: str, nmax: int = 25, nmin: int = 0, ds: float = 0.025):
+def save_basis(path: str, nmax: int = _N_MAX_, nmin: int = 0, ds: float = 0.025):
     """
     Save basis of Zernike 3D functions as binary .npy files.
     Basis funtion is determined in the unit ball, 

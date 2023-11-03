@@ -24,10 +24,9 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from sklearn.utils import resample
-from ensemble_ann import EnsembleANN
+from ensemble_ann import EnsembleANN, N_ESTIMATORS
 
 RAND_ST = 26
-N_ESTIMATORS = 100
 __file_path__ = os.getcwd()
 
 def save_gpr(X, Y, path):
